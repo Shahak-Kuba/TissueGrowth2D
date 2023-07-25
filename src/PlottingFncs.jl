@@ -1,3 +1,13 @@
+function plotInitialCondition(u0)
+    f = Figure(backgroundcolor = RGBf(0.98, 0.98, 0.98),
+        resolution = (1000, 700))
+    ga = f[1, 1] = GridLayout()
+    gaxmain = Axis(ga[1, 1], xlabel = "x", ylabel = "y")
+    append!(u0, u0[:,1])
+    scatter(gaxmain,u0[1,:], u0[2,:], markersize = 10)
+    return f
+end
+
 function plotResults(sol)
     f = Figure(backgroundcolor = RGBf(0.98, 0.98, 0.98),
         resolution = (1000, 700))
@@ -9,3 +19,4 @@ function plotResults(sol)
     end
     return f
 end
+
