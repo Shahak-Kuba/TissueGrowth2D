@@ -27,26 +27,33 @@ function _fnc(du,u,p,t)
 end
 
 function main()
-
     # setting up simulation parameters
     N = 100 # number of cells
-    R = 0.1  # shape radius
+    R = 1  # shape radius
     kₛ = 0.05
     l₀ = 1e-3
-    kf = 1.9e-3;
-    η = 1;
+    kf = 1.9e-3
+    η = 1
+    Tmax = 10.0 # days
+    btype = "circle"
+
     # setting up initial conditions
     θ = collect(LinRange(0.0, 2*π, N+1));    # just use collect(θ) to convert into a vector
     pop!(θ);
     u0 = ElasticArray{Float64}(undef,2,N)
     for i in 1:N
-        @views u0[:,i] .= [X(R,θ[i]), Y(R,θ[i])];
+        if btype == "circle"
+            @views u0[:,i] .= [X(R,θ[i]), Y(R,θ[i])];
+        elseif btype == "square"
+            @views u0[:,i] .= [Xₛ(R,θ[i]*4/pi), Yₛ(R,θ[i]*4/pi)];
+        end
     end
+    #plotInitialCondition(u0)
     # solving ODE problem
     p = (N,kₛ,η,kf,l₀)
-    tspan = (0.0,40.0)
+    tspan = (0.0,Tmax)
     prob = ODEProblem(_fnc,u0,tspan,p)
-    savetimes = LinRange(1,40,8)
+    savetimes = LinRange(1,Tmax,4)
 
     sol = solve(prob,Tsit5(),saveat=savetimes)
     # plotting
