@@ -11,7 +11,7 @@
 """
 n calculates the unit normal vector between two neighbouring points rᵢ₊₁ and rᵢ₋₁ of a central point rᵢ
 """
-n(rᵢ₊₁, rᵢ₋₁) = -[-τ(rᵢ₊₁, rᵢ₋₁)[2];τ(rᵢ₊₁, rᵢ₋₁)[1]]
+n(rᵢ₊₁, rᵢ₋₁) = [-τ(rᵢ₊₁, rᵢ₋₁)[2];τ(rᵢ₊₁, rᵢ₋₁)[1]]
 
 
 """
@@ -21,7 +21,7 @@ l₀ = resting length of the spring
 kₛ = spring coefficient
 """
 
-Fₛ⁺(rᵢ,rᵢ₊₁, rᵢ₋₁,kₛ,l₀) = kₛ*l₀^2 * (1/l₀ - 1/δ(rᵢ₊₁, rᵢ)) * τ(rᵢ₊₁, rᵢ₋₁)
+Fₛ⁺(rᵢ,rᵢ₊₁, rᵢ₋₁,kₛ,l₀) = kₛ*l₀^2 * (1/l₀ - 1/δ(rᵢ₊₁, rᵢ)) * τ(rᵢ₊₁, rᵢ)
 
 """
 Fₛ⁻ is the spring force (Nonlinear) used for mechanical relaxation in the negative direction.
@@ -30,7 +30,7 @@ l₀ = resting length of the spring
 kₛ = spring coefficient
 """
 
-Fₛ⁻(rᵢ,rᵢ₊₁, rᵢ₋₁,kₛ,l₀) = kₛ*l₀^2 * (1/l₀ - 1/δ(rᵢ, rᵢ₋₁)) * τ(rᵢ₊₁, rᵢ₋₁)
+Fₛ⁻(rᵢ,rᵢ₊₁, rᵢ₋₁,kₛ,l₀) = -kₛ*l₀^2 * (1/l₀ - 1/δ(rᵢ, rᵢ₋₁)) * τ(rᵢ, rᵢ₋₁)
 
 """
 """
@@ -43,3 +43,16 @@ kf = the amount of tissue produced per unit area per unit time
 """
 
 Vₙ(ρ⁺,ρ⁻,kf) = kf*(ρ⁺+ρ⁻)/2  
+
+"""
+ϕ is the vector projection scalar
+"""
+
+ϕ(u,v) = (dot(u,v)/(norm(v)^2))
+
+"""
+TODO
+"""
+function ξ()
+
+end
