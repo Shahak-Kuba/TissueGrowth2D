@@ -34,9 +34,9 @@ function main()
     # setting up simulation parameters
     N = 120 # number of cells
     R = 1  # shape radius
-    kₛ = 1
+    kₛ = 0.05
     l₀ = 1e-3
-    kf = 2.2e-4
+    kf = 2.5e-4
     η = 1
 
     # rescaling 
@@ -44,8 +44,8 @@ function main()
     η = η/N
     #kf = kf/N
 
-    Tmax = 60 # days
-    btype = "hex"
+    Tmax = 30 # days
+    btype = "circle"
 
     # setting up initial conditions
     θ = collect(LinRange(0.0, 2*π, N+1));    # just use collect(θ) to convert into a vector
