@@ -15,7 +15,7 @@ function plotResults(sol)
     gaxmain = Axis(ga[1, 1], xlabel = "x", ylabel = "y")
     for i = 1:size(sol.u,1)
         append!(sol.u[i], sol.u[i][:,1])
-        lines!(gaxmain,sol.u[i][1,:], sol.u[i][2,:])
+        lines!(gaxmain,sol.u[i][1,:], sol.u[i][2,:], color = :blue, )
     end
     return f
 end

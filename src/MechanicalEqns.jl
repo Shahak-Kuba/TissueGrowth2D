@@ -51,8 +51,23 @@ Vₙ(ρ⁺,ρ⁻,kf) = kf*(ρ⁺+ρ⁻)/2
 ϕ(u,v) = (dot(u,v)/(norm(v)^2))
 
 """
+"""
+function ∠uv(rₗ, rₘ, rᵣ) 
+   u = rᵣ - rₘ
+   v = rₗ - rₘ
+
+   ψ = round(dot(u,v)/(norm(u)*norm(v)), digits=2)
+   return acos(ψ)
+end
+
+"""
 TODO
 """
-function ξ()
+function ξ(rₗ, rₘ, rᵣ)
+    ∠ = ∠uv(rₗ, rₘ, rᵣ);
+    # linear mapping of scaling values
+    m = (1-√2)/(π/2)
+    c = 1 - m*π
 
+    return m*∠ + c
 end
