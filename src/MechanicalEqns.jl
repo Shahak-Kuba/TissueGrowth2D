@@ -55,19 +55,18 @@ Vₙ(ρ⁺,ρ⁻,kf) = kf*(ρ⁺+ρ⁻)/2
 function ∠uv(rₗ, rₘ, rᵣ) 
    u = rᵣ - rₘ
    v = rₗ - rₘ
-
    ψ = round(dot(u,v)/(norm(u)*norm(v)), digits=2)
    return acos(ψ)
 end
 
 """
-TODO
+ξ is the scaling function to fix the danger zone problem cause by ∠ < π/2 
+function takes inputs left node: rₗ (i-1), central node: rₘ (i), and right node: rᵣ (i+1)
 """
 function ξ(rₗ, rₘ, rᵣ)
-    ∠ = ∠uv(rₗ, rₘ, rᵣ);
-    # linear mapping of scaling values
-    m = (1-√2)/(π/2)
-    c = 1 - m*π
-
-    return m*∠ + c
+    @views ∠ = ∠uv(rₗ, rₘ, rᵣ);
+    # linear mapping of scaling values ξ = m∠ + c
+    #m = (1-√2)/(π/2)
+    #c = 1 - m*π
+    return (1-√2)/(π/2)*∠ + 1 - ((1-√2)/(π/2))*π
 end
