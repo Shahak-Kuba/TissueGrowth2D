@@ -5,6 +5,7 @@ using LinearAlgebra
 using BenchmarkTools
 
 include("DataStructs.jl")
+include("GeometrySolvers.jl")
 include("MechanicalEqns.jl")
 include("Statistics.jl")
 include("Callbacks.jl")
@@ -13,40 +14,22 @@ include("PlottingFncs.jl")
 include("Misc.jl")
 include("TissueGrowthODEproblem.jl")
 
-# setting up ODE problem
-"""
-function _fnc(du,u,p,t) 
-    N,kₛ,η,kf,l₀ = p
-    for i = 1:N
-        if i == 1
-            @views du[:,i] = (1/η) * dot(Fₛ⁺(u[:,i],u[:,i+1],u[:,N],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,i+1],u[:,N],kₛ,l₀), τ(u[:,i+1],u[:,N]))*τ(u[:,i+1],u[:,N]) + 
-            ξ(u[:,i+1],u[:,i],u[:,N])*Vₙ(ρ(u[:,i+1],u[:,i]), ρ(u[:,i], u[:,N]), kf)*n(u[:,i+1],u[:,N])
-        elseif i == N
-            @views du[:,i] = (1/η) * dot(Fₛ⁺(u[:,i],u[:,1],u[:,i-1],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,1],u[:,i-1],kₛ,l₀), τ(u[:,1],u[:,i-1]))*τ(u[:,1],u[:,i-1]) + 
-            ξ(u[:,1],u[:,i],u[:,i-1])*Vₙ(ρ(u[:,1],u[:,i]), ρ(u[:,i], u[:,i-1]), kf)*n(u[:,1],u[:,i-1])
-        else
-            @views du[:,i] = (1/η) * dot(Fₛ⁺(u[:,i],u[:,i+1],u[:,i-1],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,i+1],u[:,i-1],kₛ,l₀), τ(u[:,i+1],u[:,i-1]))*τ(u[:,i+1],u[:,i-1]) + 
-            ξ(u[:,i+1],u[:,i],u[:,i-1])*Vₙ(ρ(u[:,i+1],u[:,i]), ρ(u[:,i], u[:,i-1]), kf)*n(u[:,i+1],u[:,i-1])
-        end 
-    end
-end"""
-
 function main()
     # setting up simulation parameters
-    N = 66 # number of cells
-    R = 1  # shape radius
-    kₛ = 0.5   # high Fₛ: 2.5, mid Fₛ: 0.5, low Fₛ: 0.01 
+    N = 120 # number of cells
+    R = 10  # shape radius
+    kₛ = 0.1   # high Fₛ: 2.5, mid Fₛ: 0.5, low Fₛ: 0.01 
     l₀ = 1e-3
-    kf = 1e-3
+    kf = 1e-4
     η = 1
 
 
     # rescaling 
     kₛ = kₛ*N
     η = η/N
-    #kf = kf/N
+    kf = kf/N
 
-    Tmax = 38.95 # days
+    Tmax = 1 # days
     btype = "hex"
 
     # setting up initial conditions
@@ -66,7 +49,7 @@ function main()
     # solving ODE problem
     p = (N,kₛ,η,kf,l₀)
     tspan = (0.0,Tmax)
-    prob = ODEProblem(_fnc,u0,tspan,p)
+    prob = ODEProblem(_fnc2,u0,tspan,p)
     savetimes = LinRange(0,Tmax,10)
 
     u0, sol = solve(prob,BS5(),saveat=savetimes)
