@@ -18,11 +18,13 @@ function lineIntersection(rₘ₁,rₗ,rₘ₂,rᵣ)
     t = ((rₘ₂[1] - rₘ₁[1])*s[2] - (rₘ₂[2] - rₘ₁[2])*s[1])/d
 
     if(0<=u && u<=1 && 0<=t && t<=1)
-        println("Yes these intersect at: ")
-        println(rₘ₁ + t*r)
+        #println("Yes these intersect at: ")
+        #println(rₘ₁ + t*r)
+        return(rₘ₁ + t*r)
     else
-        println("No these lines dont intersect, midpoint: " )
-        println(((rₘ₁ + rₘ₂)/2))
+        #println("No these lines dont intersect, midpoint: " )
+        #println(((rₘ₁ + rₘ₂)/2))
+        return (rₘ₁ + rₘ₂)/2
     end
 end
 
