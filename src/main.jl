@@ -4,21 +4,17 @@ using ElasticArrays
 using LinearAlgebra
 using BenchmarkTools
 
-include("DataStructs.jl")
 include("GeometrySolvers.jl")
 include("MechanicalEqns.jl")
-include("Statistics.jl")
-include("Callbacks.jl")
 include("PoreBoundaries.jl")
 include("PlottingFncs.jl")
-include("Misc.jl")
 include("TissueGrowthODEproblem.jl")
 
 function main()
     # setting up simulation parameters
     N = 120 # number of cells
     R = 10  # shape radius
-    kₛ = 0.1   # high Fₛ: 2.5, mid Fₛ: 0.5, low Fₛ: 0.01 
+    kₛ = 1   # high Fₛ: 2.5, mid Fₛ: 0.5, low Fₛ: 0.01 
     l₀ = 1e-3
     kf = 1e-4
     η = 1
@@ -29,7 +25,7 @@ function main()
     η = η/N
     kf = kf/N
 
-    Tmax = 1 # days
+    Tmax = 10 # days
     btype = "hex"
 
     # setting up initial conditions
@@ -49,10 +45,11 @@ function main()
     # solving ODE problem
     p = (N,kₛ,η,kf,l₀)
     tspan = (0.0,Tmax)
-    prob = ODEProblem(_fnc2,u0,tspan,p)
-    savetimes = LinRange(0,Tmax,10)
+    #prob = ODEProblem(_fnc1,u0,tspan,p)
+    prob = SplitODEProblem(_fnc1,_fnc2,u0,tspan,p)
+    savetimes = LinRange(0,Tmax,2)
 
-    u0, sol = solve(prob,BS5(),saveat=savetimes)
+    u0, sol = solve(prob,Tsit5(),saveat=savetimes,dt=0.01)
     # plotting
 
     return sol

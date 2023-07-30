@@ -1,14 +1,3 @@
-"""
-function findIntersection(rₗ,rₘ₁,rₘ₂,rᵣ)
-   Lₗ = Line(tuple(rₘ₁...), tuple(rₗ...))
-   Lᵣ = Line(tuple(rₘ₂...), tuple(rᵣ...))
-   # find intersection point
-   i = tuple(coordinates(intersect(Lₗ, Lᵣ))...)
-   # checking if intersection is within 
-
-end
-"""
-
 function lineIntersection(rₘ₁,rₗ,rₘ₂,rᵣ)
     r = rₗ-rₘ₁
     s = rᵣ-rₘ₂
@@ -28,3 +17,18 @@ function lineIntersection(rₘ₁,rₗ,rₘ₂,rᵣ)
     end
 end
 
+
+using Test
+# running test cases
+@testset "LineIntersections" begin
+    p1 = [0;0]
+    p2 = [0;1]
+    p3 = [1;0]
+    p4 = [√2;√2]
+
+    @test lineIntersection(p1,p4,p2,p3) ≈ [0.5;0.5] atol=0.01
+    @test lineIntersection(p1,p3,p2,p4) ≈ [0.;0.5] atol=0.01
+    @test lineIntersection(p1,p2,p3,p4) ≈ [0.5;0.] atol=0.01
+    @test lineIntersection(p1,p2,p1,p3) ≈ [0.;0.] atol=0.01
+    @test lineIntersection(p3,p1,p2,p4) ≈ [0.5;0.5] atol=0.01
+end

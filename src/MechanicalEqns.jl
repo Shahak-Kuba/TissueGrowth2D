@@ -44,19 +44,19 @@ kf = the amount of tissue produced per unit area per unit time
 
 Vₙ(ρ⁺::Float64,ρ⁻::Float64,kf::Float64) = kf*(ρ⁺+ρ⁻)/2  
 
-function Vₙ(rᵢ₋₂,rᵢ₋₁,rᵢ,rᵢ₊₁,rᵢ₊₂,kf)
+function Vₙ(rᵢ₋₁,rᵢ,rᵢ₊₁,kf)
     ρₗ = ρ(rᵢ,rᵢ₋₁)
     ρᵣ = ρ(rᵢ₊₁,rᵢ)
     Vₗ = kf*ρₗ
     Vᵣ = kf*ρᵣ
 
-    nₗ = n(rᵢ₋₂,rᵢ)
-    nᵣ = n(rᵢ,rᵢ₊₂)
+    nₗ = n(rᵢ₋₁,rᵢ)
+    nᵣ = n(rᵢ,rᵢ₊₁)
 
-    rₗ = rᵢ + Vₗ*nₗ
-    rₘ₁ = rᵢ₋₁ + Vₗ*nₗ
-    rᵣ = rᵢ + Vᵣ*nᵣ
-    rₘ₂ = rᵢ₊₁ + Vᵣ*nᵣ
+    rₘ₁ = rᵢ + Vₗ*nₗ*0.01
+    rₗ = rᵢ₋₁ + Vₗ*nₗ*0.01
+    rₘ₂ = rᵢ + Vᵣ*nᵣ*0.01
+    rᵣ = rᵢ₊₁ + Vᵣ*nᵣ*0.01
 
     return -lineIntersection(rₘ₁,rₗ,rₘ₂,rᵣ)
 end
