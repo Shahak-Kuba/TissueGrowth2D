@@ -4,7 +4,7 @@ function plotInitialCondition(u0)
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], xlabel = "x", ylabel = "y")
     append!(u0, u0[:,1])
-    lines(gaxmain,u0[1,:], u0[2,:], markersize = 10)
+    lines!(gaxmain,u0[1,:], u0[2,:], markersize = 10)
     return f
 end
 
