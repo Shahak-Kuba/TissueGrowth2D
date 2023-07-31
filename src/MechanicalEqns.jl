@@ -42,9 +42,9 @@ Vₙ is the normal velocity of the interface such that Vₙ ∝ ρ
 kf = the amount of tissue produced per unit area per unit time
 """
 
-Vₙ(ρ⁺::Float64,ρ⁻::Float64,kf::Float64) = kf*(ρ⁺+ρ⁻)/2  
+#Vₙ(ρ⁺::Float64,ρ⁻::Float64,kf::Float64) = kf*(ρ⁺+ρ⁻)/2  
 
-function Vₙ(rᵢ₋₁,rᵢ,rᵢ₊₁,kf)
+function Vₙ(rᵢ₋₁,rᵢ,rᵢ₊₁,kf,δt)
     ρₗ = ρ(rᵢ,rᵢ₋₁)
     ρᵣ = ρ(rᵢ₊₁,rᵢ)
     Vₗ = kf*ρₗ
@@ -53,12 +53,12 @@ function Vₙ(rᵢ₋₁,rᵢ,rᵢ₊₁,kf)
     nₗ = n(rᵢ₋₁,rᵢ)
     nᵣ = n(rᵢ,rᵢ₊₁)
 
-    rₘ₁ = rᵢ + Vₗ*nₗ*0.01
-    rₗ = rᵢ₋₁ + Vₗ*nₗ*0.01
-    rₘ₂ = rᵢ + Vᵣ*nᵣ*0.01
-    rᵣ = rᵢ₊₁ + Vᵣ*nᵣ*0.01
+    rₘ₁ = rᵢ - Vₗ*nₗ*δt
+    rₗ = rᵢ₋₁ - Vₗ*nₗ*δt
+    rₘ₂ = rᵢ - Vᵣ*nᵣ*δt
+    rᵣ = rᵢ₊₁ - Vᵣ*nᵣ*δt
 
-    return -lineIntersection(rₘ₁,rₗ,rₘ₂,rᵣ)
+    return (lineIntersection(rₘ₁,rₗ,rₘ₂,rᵣ) - rᵢ)/δt
 end
 
 """

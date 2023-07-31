@@ -35,14 +35,14 @@ function _fnc1(du,u,p,t)
 end
 
 function _fnc2(du,u,p,t) 
-    N,kₛ,η,kf,l₀ = p
+    N,kₛ,η,kf,l₀,δt = p
     for i = 1:N
         if i == 1
-            @views du[:,i] = Vₙ(u[:,N],u[:,i],u[:,i+1],kf)
+            @views du[:,i] = Vₙ(u[:,N],u[:,i],u[:,i+1],kf,δt)
         elseif i == N
-            @views du[:,i] = Vₙ(u[:,i-1],u[:,i],u[:,1],kf)
+            @views du[:,i] = Vₙ(u[:,i-1],u[:,i],u[:,1],kf,δt)
         else
-            @views du[:,i] = Vₙ(u[:,i-1],u[:,i],u[:,i+1],kf)
+            @views du[:,i] = Vₙ(u[:,i-1],u[:,i],u[:,i+1],kf,δt)
         end 
     end
 end
