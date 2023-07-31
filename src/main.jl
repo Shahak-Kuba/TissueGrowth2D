@@ -27,7 +27,7 @@ function main()
 
     Tmax = 60 # days
     δt = 0.001;
-    btype = "circle"
+    btype = "triangle"
 
     # setting up initial conditions
     θ = collect(LinRange(0.0, 2*π, N+1));    # just use collect(θ) to convert into a vector
