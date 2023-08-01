@@ -1,10 +1,10 @@
 function lineIntersection(rₘ₁,rₗ,rₘ₂,rᵣ)
-    r = rₗ-rₘ₁
-    s = rᵣ-rₘ₂
+    @views r = rₗ-rₘ₁
+    @views s = rᵣ-rₘ₂
     
-    d = r[1]*s[2] - r[2]*s[1]
-    u = ((rₘ₂[1] - rₘ₁[1])*r[2] - (rₘ₂[2] - rₘ₁[2])*r[1])/d
-    t = ((rₘ₂[1] - rₘ₁[1])*s[2] - (rₘ₂[2] - rₘ₁[2])*s[1])/d
+    @views d = r[1]*s[2] - r[2]*s[1]
+    @views u = ((rₘ₂[1] - rₘ₁[1])*r[2] - (rₘ₂[2] - rₘ₁[2])*r[1])/d
+    @views t = ((rₘ₂[1] - rₘ₁[1])*s[2] - (rₘ₂[2] - rₘ₁[2])*s[1])/d
 
     if(0<=u && u<=1 && 0<=t && t<=1)
         #println("Yes these intersect at: ")

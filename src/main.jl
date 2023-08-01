@@ -62,6 +62,27 @@ function main()
     return sol
 end
 
+function sim_btypes()
+    # setting up simulation parameters
+    N = 384 # number of cells
+    R₀ = 1  # shape radius
+    kₛ = 0.025   # high Fₛ: 2.5, mid Fₛ: 0.5, low Fₛ: 0.01 
+    l₀ = 1e-3
+    kf = 5e-2
+    η = 1
+    Tmax = 60 # days
+    δt = 0.001
+    btypes = ["circle","triangle","square","hex"]
+
+    for ii = 1:axes(btypes,1)
+        @views btype = btypes[ii]
+        prob = SetupODEproblem(btype,N,R₀,kₛ,η,kf,l₀,δt,Tmax)
+        sol = solve(prob,SplitEuler(),saveat=savetimes,dt=δt)
+    end
+
+
+end
+
 u0, sol = @time main();
 
 f = plotResults(sol)
