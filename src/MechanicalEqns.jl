@@ -61,29 +61,17 @@ function Vₙ(rᵢ₋₁,rᵢ,rᵢ₊₁,kf,δt)
     return (lineIntersection(rₘ₁,rₗ,rₘ₂,rᵣ) - rᵢ)/δt
 end
 
-"""
-ϕ is the vector projection scalar
-"""
-
-ϕ(u,v) = (dot(u,v)/(norm(v)^2))
 
 """
+κ(rᵢ₋₁,rᵢ,rᵢ₊₁) approximated the curvature of the shape for κ vs V plots
 """
-function ∠uv(rₗ, rₘ, rᵣ) 
-   u = rᵣ - rₘ
-   v = rₗ - rₘ
-   ψ = round(dot(u,v)/(norm(u)*norm(v)), digits=2)
-   return acos(ψ)
-end
 
-"""
-ξ is the scaling function to fix the danger zone problem cause by ∠ < π/2 
-function takes inputs left node: rₗ (i-1), central node: rₘ (i), and right node: rᵣ (i+1)
-"""
-function ξ(rₗ, rₘ, rᵣ)
-    @views ∠ = ∠uv(rₗ, rₘ, rᵣ);
-    # linear mapping of scaling values ξ = m∠ + c
-    #m = (1-√2)/(π/2)
-    #c = 1 - m*π
-    return (1-√2)/(π/2)*∠ + 1 - ((1-√2)/(π/2))*π
+function κ(rᵢ₋₁,rᵢ,rᵢ₊₁)
+    
+    @views Dt2X = 0.5*(rᵢ₋₁[1] -2*rᵢ[1] + rᵢ₊₁[1]);
+    @views DtX = 0.5*(rᵢ₊₁[1] - rᵢ₋₁[1]);
+    @views Dt2Y = 0.5*(rᵢ₋₁[2] -2*rᵢ[2] + rᵢ₊₁[2]);
+    @views DtY = 0.5*(rᵢ₊₁[2] - rᵢ₋₁[2]);
+
+    return (DtX*Dt2Y - DtY*Dt2X) / (DtX^2 + DtY^2)^(3/2); 
 end

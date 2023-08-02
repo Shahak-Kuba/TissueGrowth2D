@@ -3,12 +3,14 @@ using CairoMakie
 using ElasticArrays
 using LinearAlgebra
 using BenchmarkTools
+using Printf
 
 include("GeometrySolvers.jl")
 include("MechanicalEqns.jl")
 include("PoreBoundaries.jl")
 include("PlottingFncs.jl")
 include("TissueGrowthODEproblem.jl")
+include("Misc.jl")
 
 function main()
     # setting up simulation parameters
@@ -62,7 +64,7 @@ function main()
     return sol
 end
 
-function sim_btypes()
+function main2()
     # setting up simulation parameters
     N = 384 # number of cells
     R₀ = 1  # shape radius
@@ -70,19 +72,31 @@ function sim_btypes()
     l₀ = 1e-3
     kf = 5e-2
     η = 1
-    Tmax = 60 # days
+    Tmax = 10 # days
     δt = 0.001
     btypes = ["circle","triangle","square","hex"]
+    savetimes = LinRange(0,Tmax,8)
 
-    for ii = 1:axes(btypes,1)
+    sol_array = Array{ODESolution}(undef,length(btypes));
+    # creating figure
+    f = Figure(backgroundcolor = RGBf(0.98, 0.98, 0.98),
+        resolution = (1000, 700))
+    # creating 
+
+    for ii in eachindex(btypes)
         @views btype = btypes[ii]
         prob = SetupODEproblem(btype,N,R₀,kₛ,η,kf,l₀,δt,Tmax)
-        sol = solve(prob,SplitEuler(),saveat=savetimes,dt=δt)
+        #@time sol = solve(prob,SplitEuler(),saveat=savetimes,dt=δt)
+        @time sol_array[ii] = solve(prob,Euler(),saveat=savetimes,dt=δt)
+        printInfo(ii,length(btypes),btype,N,kₛ,η,kf)
     end
 
+    return sol_array
 
 end
 
-u0, sol = @time main();
+sols = main2();
 
-f = plotResults(sol)
+#u0, sol = @time main();
+
+#f = plotResults(sol)

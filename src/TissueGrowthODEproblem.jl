@@ -1,4 +1,20 @@
 # Mechanical Relaxation ODE problem
+function _fnc(du,u,p,t) 
+    N,kₛ,η,kf,l₀,δt = p
+    for i = 1:N
+        if i == 1
+            @views du[:,i] = (1/η) * dot(Fₛ⁺(u[:,i],u[:,i+1],u[:,N],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,i+1],u[:,N],kₛ,l₀), τ(u[:,i+1],u[:,N]))*τ(u[:,i+1],u[:,N]) +
+            Vₙ(u[:,N],u[:,i],u[:,i+1],kf,δt)
+        elseif i == N
+            @views du[:,i] = (1/η) * dot(Fₛ⁺(u[:,i],u[:,1],u[:,i-1],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,1],u[:,i-1],kₛ,l₀), τ(u[:,1],u[:,i-1]))*τ(u[:,1],u[:,i-1]) +
+            Vₙ(u[:,i-1],u[:,i],u[:,1],kf,δt)
+        else
+            @views du[:,i] = (1/η) * dot(Fₛ⁺(u[:,i],u[:,i+1],u[:,i-1],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,i+1],u[:,i-1],kₛ,l₀), τ(u[:,i+1],u[:,i-1]))*τ(u[:,i+1],u[:,i-1]) +
+            Vₙ(u[:,i-1],u[:,i],u[:,i+1],kf,δt)
+        end 
+    end
+end
+
 function _fnc1(du,u,p,t) 
     N,kₛ,η,kf,l₀ = p
     for i = 1:N
@@ -76,5 +92,6 @@ function SetupODEproblem(btype,N,R₀,kₛ,η,kf,l₀,δt,Tmax)
     tspan = (0.0,Tmax)
     #prob = ODEProblem(_fnc2,u0,tspan,p)
     #prob = SplitODEProblem(_fnc1,_fnc2,u0,tspan,p)
-    return SplitODEProblem(_fnc1,_fnc2,u0,tspan,p)
+    #return SplitODEProblem(_fnc1,_fnc2,u0,tspan,p)
+    return ODEProblem(_fnc,u0,tspan,p)
 end
