@@ -1,6 +1,11 @@
 function lineIntersection(rₘ₁,rₗ,rₘ₂,rᵣ)
     @views r = rₗ-rₘ₁
     @views s = rᵣ-rₘ₂
+
+    # performing determinant test in case lines are parallel
+    if det([r[1] s[1] ; r[2] s[2]]) == 0
+        return (rₘ₁ + rₘ₂)/2
+    end
     
     @views d = r[1]*s[2] - r[2]*s[1]
     @views u = ((rₘ₂[1] - rₘ₁[1])*r[2] - (rₘ₂[2] - rₘ₁[2])*r[1])/d
@@ -31,4 +36,5 @@ using Test
     @test lineIntersection(p1,p2,p3,p4) ≈ [0.5;0.] atol=0.01
     @test lineIntersection(p1,p2,p1,p3) ≈ [0.;0.] atol=0.01
     @test lineIntersection(p3,p1,p2,p4) ≈ [0.5;0.5] atol=0.01
+    @test lineIntersection(p1,p1,p2,p3) ≈ [0.;0.5] atol=0.01    # det(M) == 0 test
 end
