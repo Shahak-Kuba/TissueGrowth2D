@@ -1,13 +1,13 @@
 function lineIntersection(rₘ₁,rₗ,rₘ₂,rᵣ)
     @views r = rₗ-rₘ₁
     @views s = rᵣ-rₘ₂
-
+    
+    @views d = r[1]*s[2] - r[2]*s[1]
     # performing determinant test in case lines are parallel
-    if det([r[1] s[1] ; r[2] s[2]]) == 0
+    if d == 0
         return (rₘ₁ + rₘ₂)/2
     end
     
-    @views d = r[1]*s[2] - r[2]*s[1]
     @views u = ((rₘ₂[1] - rₘ₁[1])*r[2] - (rₘ₂[2] - rₘ₁[2])*r[1])/d
     @views t = ((rₘ₂[1] - rₘ₁[1])*s[2] - (rₘ₂[2] - rₘ₁[2])*s[1])/d
 
