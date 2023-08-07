@@ -5,12 +5,13 @@ using LinearAlgebra
 using BenchmarkTools
 using Printf
 
-include("GeometrySolvers.jl")
 include("MechanicalEqns.jl")
 include("PoreBoundaries.jl")
 include("PlottingFncs.jl")
+include("GeometrySolvers.jl")
 include("TissueGrowthODEproblem.jl")
 include("Misc.jl")
+include("DataStructs.jl")
 
 function main()
     # setting up simulation parameters
@@ -40,13 +41,13 @@ function main()
             R = R₀ # to produce identical areas
             @views u0[:,i] .= [X(R,θ[i]), Y(R,θ[i])];
         elseif btype == "triangle"
-            R = √((2*π*R₀^2)/sin(π/3))
+            R = √((2*π*R₀^2)/sin(π/3))  # side length to produce identical areas
             @views u0[:,i] .= [Xₜ(R,θ[i]*3/(2*π)), Yₜ(R,θ[i]*3/(2*π))];
         elseif btype == "square"
-            R = √(π*(R₀^2)) # to produce identical areas
+            R = √(π*(R₀^2))  # side length to produce identical areas
             @views u0[:,i] .= [Xₛ(R,θ[i]*2/pi), Yₛ(R,θ[i]*2/pi)];
         elseif btype == "hex"
-            R = √((2/3√3)*π*(R₀^2)) # to produce identical areas
+            R = √((2/3√3)*π*(R₀^2))  # side length to produce identical areas
             @views u0[:,i] .= [Xₕ(R,θ[i]*3/pi), Yₕ(R,θ[i]*3/pi)];
         end
     end
@@ -97,6 +98,6 @@ end
 
 sols = main2();
 
-#u0, sol = @time main();
+u0, sol = @time main();
 
-#f = plotResults(sol)
+f = plotResults(sol)
