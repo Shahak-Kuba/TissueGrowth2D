@@ -82,9 +82,6 @@ function main2()
 
     #sol_array = Array{ODESolution}(undef,length(btypes));
     results = Vector{SimResults_t}(undef,0)
-    # creating figure
-    f = Figure(backgroundcolor = RGBf(0.98, 0.98, 0.98),
-        resolution = (1000, 700))
     # creating 
 
     for ii in eachindex(btypes)
@@ -108,4 +105,4 @@ u0, sol = @time main();
 results = Vector{SimResults_t}(undef,0);
 push!(results, postSimulation(btype, sol, p));
 
-f = plotResults(sols[1])
+f = plotResults(sols[4])

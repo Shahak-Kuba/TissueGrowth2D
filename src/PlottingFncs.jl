@@ -1,3 +1,6 @@
+
+# Colormaps available at: https://docs.juliahub.com/MakieGallery/Ql23q/0.2.17/generated/colors.html#Colormaps
+
 function plotResults(sol)
     f = Figure(backgroundcolor = RGBf(0.98, 0.98, 0.98),
         resolution = (500, 500))
@@ -6,8 +9,8 @@ function plotResults(sol)
     for i = 1:size(sol.u,1)
         #append!(sol.u[i], sol.u[i][:,1])
         #append!(sol.ψ[i], sol.ψ[i][:,1])
-        lines!(gaxmain,sol.u[i][1,:], sol.u[i][2,:], color = sol.Vₙ[i], colorrange = (0,0.01),
-        colormap = :RdYlBu_7, linewidth = 4)
+        lines!(gaxmain,sol.u[i][1,:], sol.u[i][2,:], color = sol.Vₙ[i], colorrange = (0.0079,0.037*1.1),
+        colormap = :gnuplot2, linewidth = 4)
     end
     
     return f
