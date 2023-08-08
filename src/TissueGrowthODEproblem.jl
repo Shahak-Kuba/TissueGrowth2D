@@ -82,7 +82,7 @@ function SetupODEproblem(btype,N,R₀,kₛ,η,kf,l₀,δt,Tmax)
             R = √(π*(R₀^2)) # to produce identical areas
             @views u0[:,i] .= [Xₛ(R,θ[i]*2/pi), Yₛ(R,θ[i]*2/pi)];
         elseif btype == "hex"
-            R = √((2/3*√3)*π*(R₀^2)) # to produce identical areas
+            R = √((2/(3*√3))*π*(R₀^2)) # to produce identical areas
             @views u0[:,i] .= [Xₕ(R,θ[i]*3/pi), Yₕ(R,θ[i]*3/pi)];
         end
     end
@@ -93,5 +93,5 @@ function SetupODEproblem(btype,N,R₀,kₛ,η,kf,l₀,δt,Tmax)
     #prob = ODEProblem(_fnc2,u0,tspan,p)
     #prob = SplitODEProblem(_fnc1,_fnc2,u0,tspan,p)
     #return SplitODEProblem(_fnc1,_fnc2,u0,tspan,p)
-    return ODEProblem(_fnc,u0,tspan,p)
+    return ODEProblem(_fnc,u0,tspan,p), p
 end

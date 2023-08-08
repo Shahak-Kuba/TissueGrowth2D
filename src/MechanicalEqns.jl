@@ -40,7 +40,7 @@ function PostCalcs(u, p)
     vₙ = zeros(size(u,2))
     ψ = zeros(size(u,2))
 
-    for i in axes(u,2)
+    for i in eachindex(u[1,:])
         if i == 1
             @views ∑F[i] = (1/η) * dot(Fₛ⁺(u[:,i],u[:,i+1],u[:,N],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,i+1],u[:,N],kₛ,l₀), τ(u[:,i+1],u[:,N]))
             @views vₙ[i] = norm(Vₙ(u[:,N],u[:,i],u[:,i+1],kf,δt))
@@ -126,7 +126,7 @@ function postSimulation(btype, sol, p)
     vₙ = Vector{Vector{Float64}}(undef,0)
 
     for ii in axes(sol.u,1)
-        Area[ii] = Ω(sol.u[1]) # area calculation
+        Area[ii] = Ω(sol.u[ii]) # area calculation
         #append!(sol.u[ii], sol.u[ii][:,1]) # closing the domain Ω
         Fnet, nV, den, stre = PostCalcs(sol.u[ii], p)
         push!(∑F,Fnet)

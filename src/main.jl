@@ -1,5 +1,7 @@
 using OrdinaryDiffEq
 using CairoMakie
+using ColorSchemes
+using Colors
 using ElasticArrays
 using LinearAlgebra
 using BenchmarkTools
@@ -47,7 +49,7 @@ function main()
             R = √(π*(R₀^2))  # side length to produce identical areas
             @views u0[:,i] .= [Xₛ(R,θ[i]*2/pi), Yₛ(R,θ[i]*2/pi)];
         elseif btype == "hex"
-            R = √((2/3√3)*π*(R₀^2))  # side length to produce identical areas
+            R = √((2/(3√3))*π*(R₀^2))  # side length to produce identical areas
             @views u0[:,i] .= [Xₕ(R,θ[i]*3/pi), Yₕ(R,θ[i]*3/pi)];
         end
     end
@@ -73,12 +75,13 @@ function main2()
     l₀ = 1e-3
     kf = 5e-2
     η = 1
-    Tmax = 10 # days
+    Tmax = 60 # days
     δt = 0.001
     btypes = ["circle","triangle","square","hex"]
     savetimes = LinRange(0,Tmax,8)
 
-    sol_array = Array{ODESolution}(undef,length(btypes));
+    #sol_array = Array{ODESolution}(undef,length(btypes));
+    results = Vector{SimResults_t}(undef,0)
     # creating figure
     f = Figure(backgroundcolor = RGBf(0.98, 0.98, 0.98),
         resolution = (1000, 700))
@@ -86,18 +89,23 @@ function main2()
 
     for ii in eachindex(btypes)
         @views btype = btypes[ii]
-        prob = SetupODEproblem(btype,N,R₀,kₛ,η,kf,l₀,δt,Tmax)
+        prob, p = SetupODEproblem(btype,N,R₀,kₛ,η,kf,l₀,δt,Tmax)
         #@time sol = solve(prob,SplitEuler(),saveat=savetimes,dt=δt)
-        @time sol_array[ii] = solve(prob,Euler(),saveat=savetimes,dt=δt)
-        printInfo(ii,length(btypes),btype,N,kₛ,η,kf)
+        @time sol = solve(prob,Euler(),saveat=savetimes,dt=δt)
+        push!(results, postSimulation(btype, sol, p))
+        #printInfo(ii,length(btypes),btype,N,kₛ,η,kf)
     end
 
-    return sol_array
+    return results
 
 end
 
 sols = main2();
+f = plotAreaVStime(sols)
 
 u0, sol = @time main();
 
-f = plotResults(sol)
+results = Vector{SimResults_t}(undef,0);
+push!(results, postSimulation(btype, sol, p));
+
+f = plotResults(sols[1])
