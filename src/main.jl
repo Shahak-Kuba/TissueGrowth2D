@@ -105,4 +105,7 @@ u0, sol = @time main();
 results = Vector{SimResults_t}(undef,0);
 push!(results, postSimulation(btype, sol, p));
 
-f = plotResults(sols[4])
+f = plotResults(sols[1].u, sols[1].Density)
+f = plotResults(sols[2].u, sols[2].Density)
+f = plotResults(sols[3].u, sols[3].Density)
+f = plotResults(sols[4].u, sols[4].Density)
