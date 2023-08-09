@@ -39,14 +39,15 @@ end
 
 function plotAreaVStime(sols)
     f = Figure(backgroundcolor = RGBf(0.98, 0.98, 0.98),
-        resolution = (500, 500))
+        resolution = (700, 500))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], xlabel = "Time [Days]", ylabel = "Ω [μm²]")
-    for ii in eachindex(sols)
-        lines!(gaxmain, sols[ii].t, sols[ii].Ω, linewidth = 4)
-    end
+    gaxmain = Axis(ga[1, 1], title = "Void area over time", xlabel = "Time [Days]", ylabel = "Ω [μm²]")
+    lin1 = lines!(gaxmain, sols[1].t, sols[1].Ω, linewidth = 4, linestyle = :solid)
+    lin2 = lines!(gaxmain, sols[2].t, sols[2].Ω, linewidth = 4, linestyle = :dash)
+    lin3 = lines!(gaxmain, sols[3].t, sols[3].Ω, linewidth = 4, linestyle = :dot)
+    lin4 = lines!(gaxmain, sols[4].t, sols[4].Ω, linewidth = 4, linestyle = :dashdot)
+    Legend(f[1, 2],[lin1, lin2, lin3, lin4], ["circle", "triangle", "square", "hex"])
     return f
 end
-
 
 
