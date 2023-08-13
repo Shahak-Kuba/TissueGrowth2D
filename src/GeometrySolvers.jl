@@ -1,20 +1,20 @@
 function lineIntersection(rₘ₁,rₗ,rₘ₂,rᵣ)
-    @views r = rₗ-rₘ₁
-    @views s = rᵣ-rₘ₂
+    r = rₗ.-rₘ₁
+    s = rᵣ.-rₘ₂
     
-    @views d = r[1]*s[2] - r[2]*s[1]
+    d = r[1]*s[2] - r[2]*s[1]
     # performing determinant test in case lines are parallel
     if d == 0
         return (rₘ₁ + rₘ₂)/2
     end
 
-    @views u = ((rₘ₂[1] - rₘ₁[1])*r[2] - (rₘ₂[2] - rₘ₁[2])*r[1])/d
-    @views t = ((rₘ₂[1] - rₘ₁[1])*s[2] - (rₘ₂[2] - rₘ₁[2])*s[1])/d
+    u = ((rₘ₂[1] - rₘ₁[1])*r[2] - (rₘ₂[2] - rₘ₁[2])*r[1])/d
+    t = ((rₘ₂[1] - rₘ₁[1])*s[2] - (rₘ₂[2] - rₘ₁[2])*s[1])/d
 
-    if(0<=u && u<=1 && 0<=t && t<=1)
+    if 0≤u≤1 && 0≤t≤1
         #println("Yes these intersect at: ")
         #println(rₘ₁ + t*r)
-        return(rₘ₁ + t*r)
+        return (rₘ₁ + t*r)
     else
         #println("No these lines dont intersect, midpoint: " )
         #println(((rₘ₁ + rₘ₂)/2))
@@ -26,9 +26,9 @@ function Ω(p)
     A = 0
     for ii in axes(p,2)
         if ii == size(p,2)
-            @views A += (p[1,ii]*p[2,1] -  p[2,ii]*p[1,1])
+            A += (p[1,ii]*p[2,1] -  p[2,ii]*p[1,1])
         else
-            @views A += (p[1,ii]*p[2,ii+1] -  p[2,ii]*p[1,ii+1])
+            A += (p[1,ii]*p[2,ii+1] -  p[2,ii]*p[1,ii+1])
         end
     end
     return abs(A)/2;

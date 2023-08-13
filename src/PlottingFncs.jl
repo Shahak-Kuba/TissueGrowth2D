@@ -21,32 +21,45 @@ end
 
 # Colormaps available at: https://docs.juliahub.com/MakieGallery/Ql23q/0.2.17/generated/colors.html#Colormaps
 
-function plotResults(u,var)
-    f = Figure(backgroundcolor = RGBf(0.98, 0.98, 0.98),
-        resolution = (500, 500))
+function plotResults(u, var)
+    f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
+        resolution=(500, 500))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], limits=(-1.5,1.5,-1.5,1.5), aspect = DataAspect(), xlabel = "x", ylabel = "y")
+    gaxmain = Axis(ga[1, 1], limits=(-1.5, 1.5, -1.5, 1.5), aspect=DataAspect(), xlabel="x", ylabel="y")
     CRange = findMinMax(var)
     for i in eachindex(u)
-        lines!(gaxmain,u[i][1,:], u[i][2,:], color = var[i], colorrange = CRange,
-        colormap = :jet, linewidth = 4)
+        lines!(gaxmain, u[i][1, :], u[i][2, :], color=var[i], colorrange=CRange,
+            colormap=:jet, linewidth=4)
     end
-    Colorbar(f[1,2], limits = CRange, colormap = :jet,
-    flipaxis = false, label = "ρ [μm²]")
+    Colorbar(f[1, 2], limits=CRange, colormap=:jet,
+        flipaxis=false, label="ρ [μm²]")
     return f
 end
 
 
 function plotAreaVStime(sols)
-    f = Figure(backgroundcolor = RGBf(0.98, 0.98, 0.98),
-        resolution = (700, 500))
+    f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
+        resolution=(700, 500))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], title = "Void area over time", xlabel = "Time [Days]", ylabel = "Ω [μm²]")
-    lin1 = lines!(gaxmain, sols[1].t, sols[1].Ω, linewidth = 4, linestyle = :solid)
-    lin2 = lines!(gaxmain, sols[2].t, sols[2].Ω, linewidth = 4, linestyle = :dash)
-    lin3 = lines!(gaxmain, sols[3].t, sols[3].Ω, linewidth = 4, linestyle = :dot)
-    lin4 = lines!(gaxmain, sols[4].t, sols[4].Ω, linewidth = 4, linestyle = :dashdot)
-    Legend(f[1, 2],[lin1, lin2, lin3, lin4], ["circle", "triangle", "square", "hex"])
+    gaxmain = Axis(ga[1, 1], title="Void area over time", xlabel="Time [Days]", ylabel="Ω [μm²]")
+    lin1 = lines!(gaxmain, sols[1].t, sols[1].Ω, linewidth=4, linestyle=:solid)
+    lin2 = lines!(gaxmain, sols[2].t, sols[2].Ω, linewidth=4, linestyle=:dash)
+    lin3 = lines!(gaxmain, sols[3].t, sols[3].Ω, linewidth=4, linestyle=:dot)
+    lin4 = lines!(gaxmain, sols[4].t, sols[4].Ω, linewidth=4, linestyle=:dashdot)
+    Legend(f[1, 2], [lin1, lin2, lin3, lin4], ["circle", "triangle", "square", "hex"])
+    return f
+end
+
+function plotKapVsVel(sol)
+    f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
+        resolution=(700, 500))
+    ga = f[1, 1] = GridLayout()
+    gaxmain = Axis(ga[1, 1], title="Curvature vs velocity @ different days", xlabel="κ", ylabel="vₙ [μms⁻¹]")
+    for ii in axes(sol.Κ,1)
+        mid = floor(Int64, length(sol.Κ[ii])/6)
+        scatter!(gaxmain, sol.Κ[ii][2:mid], sol.Vₙ[ii][2:mid], markersize = 20, marker = '*')
+    end
+
     return f
 end
 
