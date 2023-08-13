@@ -56,11 +56,26 @@ function plotKapVsVel(sol)
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], title="Curvature vs velocity @ different days", xlabel="κ", ylabel="vₙ [μms⁻¹]")
     for ii in axes(sol.Κ,1)
-        mid = floor(Int64, length(sol.Κ[ii])/6)
-        scatter!(gaxmain, sol.Κ[ii][2:mid], sol.Vₙ[ii][2:mid], markersize = 20, marker = '*')
+        if sol.btype == "triangle"
+            mid = floor(Int64, length(sol.Κ[ii])/3)
+        elseif sol.btype == "square"
+            mid = floor(Int64, length(sol.Κ[ii])/4)
+        elseif sol.btype == "hex"
+            mid = floor(Int64, length(sol.Κ[ii])/6)
+        elseif sol.btype == "circle"
+            mid = floor(Int64, length(sol.Κ[ii])/2)
+        end
+
+        x = sort(sol.Κ[ii][2:mid])
+        y = sort(sol.Vₙ[ii][2:mid])
+
+        scatter!(gaxmain, x, y, markersize = 25, marker = '*')
+
+        fit = curve_fit(LogFit, x, y)
+        yfit = fit.(x)
+        lines!(gaxmain, x, yfit, linewidth=3, linestyle=:dash)
     end
 
     return f
 end
-
 

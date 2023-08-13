@@ -6,6 +6,7 @@ using ElasticArrays
 using LinearAlgebra
 using BenchmarkTools
 using Printf
+using CurveFit
 
 include("MechanicalEqns.jl")
 include("PoreBoundaries.jl")
@@ -23,10 +24,10 @@ function main2()
     l₀ = 1e-3
     kf = 5e-2
     η = 1
-    Tmax = 60 # days
+    Tmax = 21 # days
     δt = 0.001
     btypes = ["circle", "triangle", "square", "hex"]
-    savetimes = LinRange(0, Tmax, 8)
+    savetimes = LinRange(0, Tmax, 7)
 
     #sol_array = Array{ODESolution}(undef,length(btypes));
     results = Vector{SimResults_t}(undef, 0)

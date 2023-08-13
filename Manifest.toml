@@ -2,7 +2,7 @@
 
 julia_version = "1.9.2"
 manifest_format = "2.0"
-project_hash = "e47805b34e774f929a34fa6d36789ef65357eab7"
+project_hash = "bb583538bfce52af92cc2c77c3a372e130192e4d"
 
 [[deps.ADTypes]]
 git-tree-sha1 = "f5c25e8a5b29b5e941b7408bc8cc79fea4d9ef9a"
@@ -302,6 +302,12 @@ deps = ["Markdown"]
 git-tree-sha1 = "32d125af0fb8ec3f8935896122c5e345709909e5"
 uuid = "adafc99b-e345-5852-983c-f28acb93d879"
 version = "0.3.0"
+
+[[deps.CurveFit]]
+deps = ["LinearAlgebra", "Polynomials"]
+git-tree-sha1 = "074cb8efc989bfd1ba869160889b15037560a341"
+uuid = "5a033b19-8c74-5913-a970-47c3779ef25c"
+version = "0.5.0"
 
 [[deps.DataAPI]]
 git-tree-sha1 = "8da84edb865b0b5b0100c0666a9bc9a0b71c553c"
