@@ -103,14 +103,24 @@ end
 κ(rᵢ₋₁,rᵢ,rᵢ₊₁) approximated the curvature of the shape for κ vs V plots
 """
 
+#function κ(rᵢ₋₁, rᵢ, rᵢ₊₁)
+
+#    @views Dt2X = 0.5 * (rᵢ₋₁[1] - 2 * rᵢ[1] + rᵢ₊₁[1])
+#    @views DtX = 0.5 * (rᵢ₊₁[1] - rᵢ₋₁[1])
+#    @views Dt2Y = 0.5 * (rᵢ₋₁[2] - 2 * rᵢ[2] + rᵢ₊₁[2])
+#    @views DtY = 0.5 * (rᵢ₊₁[2] - rᵢ₋₁[2])
+
+#    return abs((DtX * Dt2Y - DtY * Dt2X) / (DtX^2 + DtY^2)^(3 / 2))
+#end
+
 function κ(rᵢ₋₁, rᵢ, rᵢ₊₁)
 
-    @views Dt2X = 0.5 * (rᵢ₋₁[1] - 2 * rᵢ[1] + rᵢ₊₁[1])
-    @views DtX = 0.5 * (rᵢ₊₁[1] - rᵢ₋₁[1])
-    @views Dt2Y = 0.5 * (rᵢ₋₁[2] - 2 * rᵢ[2] + rᵢ₊₁[2])
-    @views DtY = 0.5 * (rᵢ₊₁[2] - rᵢ₋₁[2])
+    A = Ω([rᵢ₋₁[1] rᵢ[1] rᵢ₊₁[1]; rᵢ₋₁[2] rᵢ[2] rᵢ₊₁[2]])
+    l1 = δ(rᵢ₋₁,rᵢ)
+    l2 = δ(rᵢ,rᵢ₊₁)
+    l3 = δ(rᵢ₋₁,rᵢ₊₁)
 
-    return abs((DtX * Dt2Y - DtY * Dt2X) / (DtX^2 + DtY^2)^(3 / 2))
+    return (4*A)/(l1*l2*l3)
 end
 
 """ 

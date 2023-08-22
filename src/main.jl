@@ -16,15 +16,15 @@ include("TissueGrowthODEproblem.jl")
 include("Misc.jl")
 include("DataStructs.jl")
 
-function main2()
+function main()
     # setting up simulation parameters
-    N = 384 # number of cells
+    N = 96 # number of cells
     R₀ = 1  # shape radius
-    kₛ = 0.025   # high Fₛ: 2.5, mid Fₛ: 0.5, low Fₛ: 0.01 
+    kₛ = 1  
     l₀ = 1e-3
-    kf = 5e-2
+    kf = 1.4e-1
     η = 1
-    Tmax = 21 # days
+    Tmax = 22 # days
     δt = 0.001
     btypes = ["circle", "triangle", "square", "hex"]
     savetimes = LinRange(0, Tmax, 7)
@@ -39,20 +39,20 @@ function main2()
         #@time sol = solve(prob,SplitEuler(),saveat=savetimes,dt=δt)
         @time sol = solve(prob, Euler(), saveat=savetimes, dt=δt)
         push!(results, postSimulation(btype, sol, p))
-        #printInfo(ii,length(btypes),btype,N,kₛ,η,kf)
+        printInfo(ii,length(btypes),btype,N,kₛ,η,kf)
     end
 
     return results
 
 end
 
-sols = main2();
+sols = main();
 f = plotAreaVStime(sols)
 
-f = plotResults(sols[1].u, sols[1].ψ)
-f = plotResults(sols[2].u, sols[2].ψ)
-f = plotResults(sols[3].u, sols[3].ψ)
-f = plotResults(sols[4].u, sols[4].ψ)
+f = plotResults(sols[1].u, sols[1].Density)
+f = plotResults(sols[2].u, sols[2].Density)
+f = plotResults(sols[3].u, sols[3].Density)
+f = plotResults(sols[4].u, sols[4].Density)
 
 f = plotKapVsVel(sols[1])
 f = plotKapVsVel(sols[2])

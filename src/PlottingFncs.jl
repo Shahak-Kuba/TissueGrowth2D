@@ -70,10 +70,11 @@ function plotKapVsVel(sol)
         y = sort(sol.Vₙ[ii][2:mid])
 
         scatter!(gaxmain, x, y, markersize = 25, marker = '*')
+        
 
-        fit = curve_fit(LogFit, x, y)
-        yfit = fit.(x)
-        lines!(gaxmain, x, yfit, linewidth=3, linestyle=:dash)
+        #fit = curve_fit(LogFit, x, y)
+        #yfit = fit.(x)
+        #lines!(gaxmain, x, yfit, linewidth=3, linestyle=:dash)
     end
 
     return f

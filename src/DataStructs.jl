@@ -7,6 +7,7 @@ struct SimResults_t
     btype::String
     t::Vector{Float64}
     u::Vector{ElasticMatrix{Float64,Vector{Float64}}}
+    du::Vector{ElasticMatrix{Float64,Vector{Float64}}}
     ∑F::Vector{Vector{Float64}}
     Density::Vector{Vector{Float64}}
     Vₙ::Vector{Vector{Float64}}
