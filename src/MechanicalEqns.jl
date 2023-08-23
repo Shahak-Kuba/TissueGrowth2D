@@ -100,7 +100,7 @@ end
 
 
 """
-κ(rᵢ₋₁,rᵢ,rᵢ₊₁) approximated the curvature of the shape for κ vs V plots
+κ(rᵢ₋₁,rᵢ,rᵢ₊₁) approximated the curvature of the shape using Menger method to approximate curvature
 """
 
 #function κ(rᵢ₋₁, rᵢ, rᵢ₊₁)
