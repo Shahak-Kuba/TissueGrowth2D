@@ -3,13 +3,31 @@ function ODE_fnc!(du,u,p,t)
     N,kₛ,η,kf,l₀,δt = p
     @views for i in 1:N
         if i == 1
-            @inbounds du[:,i] .= (1/η) * dot(Fₛ⁺(u[:,i],u[:,i+1],u[:,N],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,i+1],u[:,N],kₛ,l₀), τ(u[:,i+1],u[:,N]))*τ(u[:,i+1],u[:,N]) +
+            @inbounds du[:,i] .= (1/η) .* dot(Fₛ⁺(u[:,i],u[:,i+1],u[:,N],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,i+1],u[:,N],kₛ,l₀), τ(u[:,i+1],u[:,N]))*τ(u[:,i+1],u[:,N]) +
             Vₙ(u[:,N],u[:,i],u[:,i+1],kf,δt)
         elseif i == N
-            @inbounds du[:,i] .= (1/η) * dot(Fₛ⁺(u[:,i],u[:,1],u[:,i-1],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,1],u[:,i-1],kₛ,l₀), τ(u[:,1],u[:,i-1]))*τ(u[:,1],u[:,i-1]) +
+            @inbounds du[:,i] .= (1/η) .* dot(Fₛ⁺(u[:,i],u[:,1],u[:,i-1],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,1],u[:,i-1],kₛ,l₀), τ(u[:,1],u[:,i-1]))*τ(u[:,1],u[:,i-1]) +
             Vₙ(u[:,i-1],u[:,i],u[:,1],kf,δt)
         else
-            @inbounds du[:,i] .= (1/η) * dot(Fₛ⁺(u[:,i],u[:,i+1],u[:,i-1],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,i+1],u[:,i-1],kₛ,l₀), τ(u[:,i+1],u[:,i-1]))*τ(u[:,i+1],u[:,i-1]) +
+            @inbounds du[:,i] .= (1/η) .* dot(Fₛ⁺(u[:,i],u[:,i+1],u[:,i-1],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,i+1],u[:,i-1],kₛ,l₀), τ(u[:,i+1],u[:,i-1]))*τ(u[:,i+1],u[:,i-1]) +
+            Vₙ(u[:,i-1],u[:,i],u[:,i+1],kf,δt)
+        end 
+    end
+    nothing
+end
+
+# Open boundary ODE Function
+function ODE_fnc_NC!(du,u,p,t) 
+    N,kₛ,η,kf,l₀,δt = p
+    @views for i in 1:N
+        if i == 1
+            @inbounds du[:,i] .= (1/η) .* dot(Fₛ⁺(u[:,i],u[:,i+1],u[:,N] - [10*pi, sin(10*pi)] ,kₛ,l₀) + Fₛ⁻(u[:,i],u[:,i+1],u[:,N] - [10*pi, sin(10*pi)],kₛ,l₀), τ(u[:,i+1],u[:,N] - [10*pi, sin(10*pi)]))*τ(u[:,i+1],u[:,N] - [10*pi, sin(10*pi)]) +
+            Vₙ(u[:,N] - [10*pi, sin(10*pi)],u[:,i],u[:,i+1],kf,δt)
+        elseif i == N
+            @inbounds du[:,i] .= (1/η) .* dot(Fₛ⁺(u[:,i],u[:,1]+ [10*pi, sin(10*pi)] ,u[:,i-1],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,1]+ [10*pi, sin(10*pi)],u[:,i-1],kₛ,l₀), τ(u[:,1]+ [10*pi, sin(10*pi)],u[:,i-1]))*τ(u[:,1]+ [10*pi, sin(10*pi)],u[:,i-1]) +
+            Vₙ(u[:,i-1],u[:,i],u[:,1]+ [10*pi, sin(10*pi)],kf,δt)
+        else
+            @inbounds du[:,i] .= (1/η) .* dot(Fₛ⁺(u[:,i],u[:,i+1],u[:,i-1],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,i+1],u[:,i-1],kₛ,l₀), τ(u[:,i+1],u[:,i-1]))*τ(u[:,i+1],u[:,i-1]) +
             Vₙ(u[:,i-1],u[:,i],u[:,i+1],kf,δt)
         end 
     end
@@ -43,6 +61,7 @@ function SetupODEproblem(btype,N,R₀,kₛ,η,kf,l₀,δt,Tmax)
     η = η/N
     kf = kf/N
     # setting up initial conditions
+    """
     θ = collect(LinRange(0.0, 2*π, N+1));    # just use collect(θ) to convert into a vector
     pop!(θ);
     u0 = ElasticArray{Float64}(undef,2,N)
@@ -61,6 +80,8 @@ function SetupODEproblem(btype,N,R₀,kₛ,η,kf,l₀,δt,Tmax)
             @views u0[:,i] .= [Xₕ(R,θ[i]*3/pi), Yₕ(R,θ[i]*3/pi)];
         end
     end
+    """
+    u0 = u0SetUp(btype,R₀,N)
     #plotInitialCondition(u0)
     # solving ODE problem
     p = (N,kₛ,η,kf,l₀,δt)
@@ -68,5 +89,5 @@ function SetupODEproblem(btype,N,R₀,kₛ,η,kf,l₀,δt,Tmax)
     #prob = ODEProblem(_fnc2,u0,tspan,p)
     #prob = SplitODEProblem(_fnc1,_fnc2,u0,tspan,p)
     #return SplitODEProblem(_fnc1,_fnc2,u0,tspan,p)
-    return ODEProblem(ODE_fnc!,u0,tspan,p), p
+    return ODEProblem(ODE_fnc_NC!,u0,tspan,p), p
 end

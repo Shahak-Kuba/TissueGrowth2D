@@ -18,16 +18,18 @@ include("DataStructs.jl")
 
 function main()
     # setting up simulation parameters
-    N = 96 # number of cells
+    #N = 384 # number of cells
+    N = 500
     R₀ = 1  # shape radius
-    kₛ = 1  
+    kₛ = 0.01
     l₀ = 1e-3
-    kf = 1.4e-1
+    kf = 1
     η = 1
-    Tmax = 22 # days
+    Tmax = 300 # days
     δt = 0.001
-    btypes = ["circle", "triangle", "square", "hex"]
-    savetimes = LinRange(0, Tmax, 7)
+    #btypes = ["circle", "triangle", "square", "hex"]
+    btypes = ["SineWave"]
+    savetimes = LinRange(0, Tmax, 15)
 
     #sol_array = Array{ODESolution}(undef,length(btypes));
     results = Vector{SimResults_t}(undef, 0)
@@ -47,7 +49,7 @@ function main()
 end
 
 sols = main();
-f = plotAreaVStime(sols)
+#f = plotAreaVStime(sols)
 
 f = plotResults(sols[1].u, sols[1].Density)
 f = plotResults(sols[2].u, sols[2].Density)

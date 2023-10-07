@@ -22,10 +22,13 @@ end
 # Colormaps available at: https://docs.juliahub.com/MakieGallery/Ql23q/0.2.17/generated/colors.html#Colormaps
 
 function plotResults(u, var)
+    #f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
+    #    resolution=(500, 500))
     f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
-        resolution=(500, 500))
+        resolution=(1000, 400))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], limits=(-1.5, 1.5, -1.5, 1.5), aspect=DataAspect(), xlabel="x", ylabel="y")
+    #gaxmain = Axis(ga[1, 1], limits=(-1.5, 1.5, -1.5, 1.5), aspect=DataAspect(), xlabel="x", ylabel="y")
+    gaxmain = Axis(ga[1, 1], limits=(0, 10*pi, -1.5, 12), aspect=DataAspect(), xlabel="x", ylabel="y")
     CRange = findMinMax(var)
     for i in eachindex(u)
         lines!(gaxmain, u[i][1, :], u[i][2, :], color=var[i], colorrange=CRange,
