@@ -15,7 +15,11 @@ include("GeometrySolvers.jl")
 include("TissueGrowthODEproblem.jl")
 include("Misc.jl")
 include("DataStructs.jl")
+include("Simulation_1D.jl")
+include("Simulation_1D_PB.jl")
+include("Simulation_2D.jl")
 
+"""
 function main()
     # setting up simulation parameters
     #N = 384 # number of cells
@@ -25,11 +29,11 @@ function main()
     l₀ = 1e-3
     kf = 1
     η = 1
-    Tmax = 300 # days
+    Tmax = 250 # days
     δt = 0.001
     #btypes = ["circle", "triangle", "square", "hex"]
     btypes = ["SineWave"]
-    savetimes = LinRange(0, Tmax, 15)
+    savetimes = LinRange(0, Tmax, 30)
 
     #sol_array = Array{ODESolution}(undef,length(btypes));
     results = Vector{SimResults_t}(undef, 0)
@@ -47,9 +51,41 @@ function main()
     return results
 
 end
+"""
 
-sols = main();
+# 1D simulation (non periodic boundary)
+sols = sim1D();
 #f = plotAreaVStime(sols)
+f = plotResults(sols[1].u, sols[1].Density)
+f = plotKapVsVel(sols[1])
+
+
+
+# 1D Simulation (free right boundary)
+sols = sim1D_FB();
+f = plotAreaVStime(sols)
+f = plotResults(sols[1].u, sols[1].Density)
+f = plotKapVsVel(sols[1])
+
+
+# 1D simulation (periodic boundary)
+sols = sim1D_PB();
+f = plotAreaVStime(sols)
+
+f = plotResults(sols[1].u, sols[1].Density)
+f = plotResults(sols[2].u, sols[2].Density)
+f = plotResults(sols[3].u, sols[3].Density)
+f = plotResults(sols[4].u, sols[4].Density)
+
+f = plotKapVsVel(sols[1])
+f = plotKapVsVel(sols[2])
+f = plotKapVsVel(sols[3])
+f = plotKapVsVel(sols[4])
+
+
+# 2D simulation 
+sols = sim2D();
+f = plotAreaVStime(sols)
 
 f = plotResults(sols[1].u, sols[1].Density)
 f = plotResults(sols[2].u, sols[2].Density)

@@ -98,6 +98,19 @@ function Vₙ(rᵢ₋₁, rᵢ, rᵢ₊₁, kf, δt)
     return (lineIntersection(rₘ₁, rₗ, rₘ₂, rᵣ) - rᵢ) / δt
 end
 
+function LVₙ(rᵢ₋₁, rᵢ, rᵢ₊₁, kf, δt)
+    ρₗ = ρ(rᵢ, rᵢ₋₁)
+    V = kf*ρₗ
+    nv = [0;1]
+    return nv*V
+end
+
+function RVₙ(rᵢ₋₁, rᵢ, rᵢ₊₁, kf, δt)
+    ρᵣ = ρ(rᵢ₊₁, rᵢ)
+    V = kf*ρᵣ
+    nv = [0;1]
+    return nv*V
+end
 
 """
 κ(rᵢ₋₁,rᵢ,rᵢ₊₁) approximated the curvature of the shape using Menger method to approximate curvature
