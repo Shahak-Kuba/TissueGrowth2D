@@ -19,11 +19,12 @@ end
 # Open boundary ODE Function (NON-PERIODIC Boundary)
 function ODE_fnc_1D!(du,u,p,t) 
     N,kₛ,η,kf,l₀,δt = p
+    dom = 2*pi;
     @views for i in 1:N
         if i == 1
-            @inbounds du[:,i] .= RVₙ(u[:,N] - [10*pi, sin(10*pi)],u[:,i],u[:,i+1],kf,δt)
+            @inbounds du[:,i] .= RVₙ(u[:,N] - [dom, 0],u[:,i],u[:,i+1],kf,δt)
         elseif i == N
-            @inbounds du[:,i] .= LVₙ(u[:,i-1],u[:,i],u[:,1]+ [10*pi, sin(10*pi)],kf,δt)
+            @inbounds du[:,i] .= LVₙ(u[:,i-1],u[:,i],u[:,1]+ [dom, 0],kf,δt)
         else
             @inbounds du[:,i] .= (1/η) .* dot(Fₛ⁺(u[:,i],u[:,i+1],u[:,i-1],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,i+1],u[:,i-1],kₛ,l₀), τ(u[:,i+1],u[:,i-1]))*τ(u[:,i+1],u[:,i-1]) +
             Vₙ(u[:,i-1],u[:,i],u[:,i+1],kf,δt)
@@ -32,16 +33,17 @@ function ODE_fnc_1D!(du,u,p,t)
     nothing
 end
 
-# Open boundary ODE Function (NON-PERIODIC Boundary)
+# Open boundary ODE Function (PERIODIC Boundary)
 function ODE_fnc_1D_PB!(du,u,p,t) 
     N,kₛ,η,kf,l₀,δt = p
+    dom = 2*pi;
     @views for i in 1:N
         if i == 1
-            @inbounds du[:,i] .= (1/η) .* dot(Fₛ⁺(u[:,i],u[:,i+1],u[:,N] - [10*pi, sin(10*pi)] ,kₛ,l₀) + Fₛ⁻(u[:,i],u[:,i+1],u[:,N] - [10*pi, sin(10*pi)],kₛ,l₀), τ(u[:,i+1],u[:,N] - [10*pi, sin(10*pi)]))*τ(u[:,i+1],u[:,N] - [10*pi, sin(10*pi)]) +
-            Vₙ(u[:,N] - [10*pi, sin(10*pi)],u[:,i],u[:,i+1],kf,δt)
+            @inbounds du[:,i] .= (1/η) .* dot(Fₛ⁺(u[:,i],u[:,i+1],u[:,N]-[dom, 0] ,kₛ,l₀) + Fₛ⁻(u[:,i],u[:,i+1],u[:,N]-[dom, 0],kₛ,l₀), τ(u[:,i+1],u[:,N]-[dom, 0]))*τ(u[:,i+1],u[:,N]-[dom, 0]) +
+            Vₙ(u[:,N]-[dom, 0],u[:,i],u[:,i+1],kf,δt)
         elseif i == N
-            @inbounds du[:,i] .= (1/η) .* dot(Fₛ⁺(u[:,i],u[:,1]+ [10*pi, sin(10*pi)] ,u[:,i-1],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,1]+ [10*pi, sin(10*pi)],u[:,i-1],kₛ,l₀), τ(u[:,1]+ [10*pi, sin(10*pi)],u[:,i-1]))*τ(u[:,1]+ [10*pi, sin(10*pi)],u[:,i-1]) +
-            Vₙ(u[:,i-1],u[:,i],u[:,1]+ [10*pi, sin(10*pi)],kf,δt)
+            @inbounds du[:,i] .= (1/η) .* dot(Fₛ⁺(u[:,i],u[:,1]+[dom, 0],u[:,i-1],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,1]+[dom, 0],u[:,i-1],kₛ,l₀), τ(u[:,1]+[dom, 0],u[:,i-1]))*τ(u[:,1]+[dom, 0],u[:,i-1]) +
+            Vₙ(u[:,i-1],u[:,i],u[:,1]+[dom, 0],kf,δt)
         else
             @inbounds du[:,i] .= (1/η) .* dot(Fₛ⁺(u[:,i],u[:,i+1],u[:,i-1],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,i+1],u[:,i-1],kₛ,l₀), τ(u[:,i+1],u[:,i-1]))*τ(u[:,i+1],u[:,i-1]) +
             Vₙ(u[:,i-1],u[:,i],u[:,i+1],kf,δt)
