@@ -1,40 +1,6 @@
 # Mechanical Relaxation ODE problem
-function ODE_fnc_2D!(du,u,p,t) 
-    N,kₛ,η,kf,l₀,δt = p
-    @views for i in 1:N
-        if i == 1
-            @inbounds du[:,i] .= (1/η) .* dot(Fₛ⁺(u[:,i],u[:,i+1],u[:,N],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,i+1],u[:,N],kₛ,l₀), τ(u[:,i+1],u[:,N]))*τ(u[:,i+1],u[:,N]) +
-            Vₙ(u[:,N],u[:,i],u[:,i+1],kf,δt)
-        elseif i == N
-            @inbounds du[:,i] .= (1/η) .* dot(Fₛ⁺(u[:,i],u[:,1],u[:,i-1],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,1],u[:,i-1],kₛ,l₀), τ(u[:,1],u[:,i-1]))*τ(u[:,1],u[:,i-1]) +
-            Vₙ(u[:,i-1],u[:,i],u[:,1],kf,δt)
-        else
-            @inbounds du[:,i] .= (1/η) .* dot(Fₛ⁺(u[:,i],u[:,i+1],u[:,i-1],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,i+1],u[:,i-1],kₛ,l₀), τ(u[:,i+1],u[:,i-1]))*τ(u[:,i+1],u[:,i-1]) +
-            Vₙ(u[:,i-1],u[:,i],u[:,i+1],kf,δt)
-        end 
-    end
-    nothing
-end
-
-# Open boundary ODE Function (NON-PERIODIC Boundary)
-function ODE_fnc_1D!(du,u,p,t) 
-    N,kₛ,η,kf,l₀,δt = p
-    dom = 2*pi;
-    @views for i in 1:N
-        if i == 1
-            @inbounds du[:,i] .= RVₙ(u[:,N] - [dom, 0],u[:,i],u[:,i+1],kf,δt)
-        elseif i == N
-            @inbounds du[:,i] .= LVₙ(u[:,i-1],u[:,i],u[:,1]+ [dom, 0],kf,δt)
-        else
-            @inbounds du[:,i] .= (1/η) .* dot(Fₛ⁺(u[:,i],u[:,i+1],u[:,i-1],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,i+1],u[:,i-1],kₛ,l₀), τ(u[:,i+1],u[:,i-1]))*τ(u[:,i+1],u[:,i-1]) +
-            Vₙ(u[:,i-1],u[:,i],u[:,i+1],kf,δt)
-        end 
-    end
-    nothing
-end
-
 # Open boundary ODE Function (PERIODIC Boundary)
-function ODE_fnc_1D_PB!(du,u,p,t) 
+function ODE_fnc_1D!(du,u,p,t) 
     N,kₛ,η,kf,l₀,δt = p
     dom = 2*pi;
     @views for i in 1:N
@@ -44,6 +10,23 @@ function ODE_fnc_1D_PB!(du,u,p,t)
         elseif i == N
             @inbounds du[:,i] .= (1/η) .* dot(Fₛ⁺(u[:,i],u[:,1]+[dom, 0],u[:,i-1],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,1]+[dom, 0],u[:,i-1],kₛ,l₀), τ(u[:,1]+[dom, 0],u[:,i-1]))*τ(u[:,1]+[dom, 0],u[:,i-1]) +
             Vₙ(u[:,i-1],u[:,i],u[:,1]+[dom, 0],kf,δt)
+        else
+            @inbounds du[:,i] .= (1/η) .* dot(Fₛ⁺(u[:,i],u[:,i+1],u[:,i-1],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,i+1],u[:,i-1],kₛ,l₀), τ(u[:,i+1],u[:,i-1]))*τ(u[:,i+1],u[:,i-1]) +
+            Vₙ(u[:,i-1],u[:,i],u[:,i+1],kf,δt)
+        end 
+    end
+    nothing
+end
+
+function ODE_fnc_2D!(du,u,p,t) 
+    N,kₛ,η,kf,l₀,δt = p
+    @views for i in 1:N
+        if i == 1
+            @inbounds du[:,i] .= (1/η) .* dot(Fₛ⁺(u[:,i],u[:,i+1],u[:,N],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,i+1],u[:,N],kₛ,l₀), τ(u[:,i+1],u[:,N]))*τ(u[:,i+1],u[:,N]) +
+            Vₙ(u[:,N],u[:,i],u[:,i+1],kf,δt)
+        elseif i == N
+            @inbounds du[:,i] .= (1/η) .* dot(Fₛ⁺(u[:,i],u[:,1],u[:,i-1],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,1],u[:,i-1],kₛ,l₀), τ(u[:,1],u[:,i-1]))*τ(u[:,1],u[:,i-1]) +
+            Vₙ(u[:,i-1],u[:,i],u[:,1],kf,δt)
         else
             @inbounds du[:,i] .= (1/η) .* dot(Fₛ⁺(u[:,i],u[:,i+1],u[:,i-1],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,i+1],u[:,i-1],kₛ,l₀), τ(u[:,i+1],u[:,i-1]))*τ(u[:,i+1],u[:,i-1]) +
             Vₙ(u[:,i-1],u[:,i],u[:,i+1],kf,δt)
@@ -84,18 +67,6 @@ function SetupODEproblem1D(btype,N,R₀,kₛ,η,kf,l₀,δt,Tmax)
     p = (N,kₛ,η,kf,l₀,δt)
     tspan = (0.0,Tmax)
     return ODEProblem(ODE_fnc_1D!,u0,tspan,p), p
-end
-
-function SetupODEproblem1D_PB(btype,N,R₀,kₛ,η,kf,l₀,δt,Tmax)
-    kₛ = kₛ*N
-    η = η/N
-    kf = kf/N
-    # setting up initial conditions
-    u0 = u0SetUp(btype,R₀,N)
-    # solving ODE problem
-    p = (N,kₛ,η,kf,l₀,δt)
-    tspan = (0.0,Tmax)
-    return ODEProblem(ODE_fnc_1D_PB!,u0,tspan,p), p
 end
 
 function SetupODEproblem2D(btype,N,R₀,kₛ,η,kf,l₀,δt,Tmax)

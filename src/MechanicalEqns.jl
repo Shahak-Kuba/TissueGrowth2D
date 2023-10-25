@@ -32,42 +32,6 @@ kₛ = spring coefficient
 
 Fₛ⁻(rᵢ, rᵢ₊₁, rᵢ₋₁, kₛ, l₀) = -kₛ * l₀^2 * (1 / l₀ - 1 / δ(rᵢ, rᵢ₋₁)) * τ(rᵢ, rᵢ₋₁)
 
-function PostCalcs(u, p)
-    N, kₛ, η, kf, l₀, δt = p
-
-    ∑F = zeros(size(u, 2))
-    density = zeros(size(u, 2))
-    vₙ = zeros(size(u, 2))
-    ψ = zeros(size(u, 2))
-    Κ = zeros(size(u, 2))
-
-    for i in axes(u, 2)
-        if i == 1
-            @views ∑F[i] = abs((1 / η) * dot(Fₛ⁺(u[:, i], u[:, i+1], u[:, N], kₛ, l₀) + Fₛ⁻(u[:, i], u[:, i+1], u[:, N], kₛ, l₀), τ(u[:, i+1], u[:, N])))
-            @views vₙ[i] = norm(Vₙ(u[:, N], u[:, i], u[:, i+1], kf, δt))
-            @views density[i] = ρ(u[:, i+1], u[:, i])
-            @views ψ[i] = ∑F[i] / δ(u[:, i+1], u[:, i])
-            @views Κ[i] = κ(u[:, N], u[:, i], u[:, i+1])
-        elseif i == N
-            @views ∑F[i] = abs((1 / η) * dot(Fₛ⁺(u[:, i], u[:, 1], u[:, i-1], kₛ, l₀) + Fₛ⁻(u[:, i], u[:, 1], u[:, i-1], kₛ, l₀), τ(u[:, 1], u[:, i-1])))
-            @views vₙ[i] = norm(Vₙ(u[:, i-1], u[:, i], u[:, 1], kf, δt))
-            @views density[i] = ρ(u[:, 1], u[:, i])
-            @views ψ[i] = ∑F[i] / δ(u[:, 1], u[:, i])
-            @views Κ[i] = κ(u[:, i-1], u[:, i], u[:, 1])
-        elseif i == N + 1
-            continue
-        else
-            @views ∑F[i] = abs((1 / η) * dot(Fₛ⁺(u[:, i], u[:, i+1], u[:, i-1], kₛ, l₀) + Fₛ⁻(u[:, i], u[:, i+1], u[:, i-1], kₛ, l₀), τ(u[:, i+1], u[:, i-1])))
-            @views vₙ[i] = norm(Vₙ(u[:, i-1], u[:, i], u[:, i+1], kf, δt))
-            @views density[i] = ρ(u[:, i+1], u[:, i])
-            @views ψ[i] = ∑F[i] / δ(u[:, i+1], u[:, i])
-            @views Κ[i] = κ(u[:, i-1], u[:, i], u[:, i+1])
-        end
-    end
-
-    return ∑F, vₙ, density, ψ, Κ
-end
-
 """
 
 """
@@ -136,33 +100,4 @@ function κ(rᵢ₋₁, rᵢ, rᵢ₊₁)
     return (4*A)/(l1*l2*l3)
 end
 
-""" 
-postSimulation()
 
-Function to perform post simulation calculations which returns a data structure which contains all data
-"""
-
-function postSimulation(btype, sol, p)
-
-    c = size(sol.t, 1)
-
-    Area = Vector{Float64}(undef, c)
-    ∑F = Vector{Vector{Float64}}(undef, 0)
-    ψ = Vector{Vector{Float64}}(undef, 0)
-    density = Vector{Vector{Float64}}(undef, 0)
-    vₙ = Vector{Vector{Float64}}(undef, 0)
-    Κ = Vector{Vector{Float64}}(undef, 0)
-
-    for ii in axes(sol.u, 1)
-        Area[ii] = Ω(sol.u[ii]) # area calculation
-        #append!(sol.u[ii], sol.u[ii][:,1]) # closing the domain Ω
-        Fnet, nV, den, stre, kap = PostCalcs(sol.u[ii], p)
-        push!(∑F, Fnet)
-        push!(vₙ, nV)
-        push!(density, den)
-        push!(ψ, stre)
-        push!(Κ, kap)
-    end
-
-    return SimResults_t(btype, sol.t, sol.u, ∑F, density, vₙ, Area, ψ, Κ)
-end
