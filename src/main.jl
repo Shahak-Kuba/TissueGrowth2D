@@ -26,6 +26,10 @@ sols = sim1D();
 f = plotResults1D(sols[1].u, sols[1].Density)
 f = plotResults1D(sols[2].u, sols[2].Density)
 f = plotResults1D(sols[3].u, sols[3].Density)
+
+f = plotResults1D(sols[1].u, sols[1].Vₙ)
+f = plotResults1D(sols[2].u, sols[2].Vₙ)
+f = plotResults1D(sols[3].u, sols[3].Vₙ)
 #f = plotKapVsVel(sols[1])
 
 

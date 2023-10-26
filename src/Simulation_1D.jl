@@ -4,7 +4,7 @@ function sim1D()
     N = 250
     R₀ = 1  # shape radius
     #kₛ = 0.7
-    kₛ_Array = [0.1, 0.7, 1]
+    kₛ_Array = [0.1, 0.5, 1]
     l₀ = 1e-3
     kf = 0.7
     η = 1
