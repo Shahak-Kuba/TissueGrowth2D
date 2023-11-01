@@ -9,7 +9,7 @@ function sim1D()
     kf = 0.7
     η = 1
     Tmax = 50 # days
-    δt = 0.001
+    δt = 0.0005
     #btypes = ["circle", "triangle", "square", "hex"]
     btype = "SineWave"
     savetimes = LinRange(0, Tmax, 30)

@@ -11,7 +11,7 @@ function PostCalcs1D(u, p)
         if i == 1
             @views ∑F[i] = abs((1 / η) * dot(Fₛ⁺(u[:, i], u[:, i+1], u[:, N]-[2*pi, 0], kₛ, l₀) + Fₛ⁻(u[:, i], u[:, i+1], u[:, N]-[2*pi, 0], kₛ, l₀), τ(u[:, i+1], u[:, N]-[2*pi, 0])))
             @views vₙ[i] = norm(Vₙ(u[:,N]-[2*pi, 0],u[:,i],u[:,i+1],kf,δt))
-            @views density[i] = ρ(u[:, i+1]-[2*pi, 0], u[:, i])
+            @views density[i] = ρ(u[:, N]-[2*pi, 0], u[:, i])
             @views ψ[i] = ∑F[i] / δ(u[:, i+1], u[:, i])
             @views Κ[i] = κ(u[:, N], u[:, i], u[:, i+1]-[2*pi, 0])
         elseif i == N
