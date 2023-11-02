@@ -74,7 +74,7 @@ function initial_pos_2D(u0,N,η,kf,l₀)
     η = η/N
     kf = kf/N
     Tmax = 10;
-    δt = 0.01
+    δt = 0.0005
     p = (N,kₛ,η,kf,l₀,δt)
     tspan = (0.0,Tmax)
     prob = ODEProblem(ODE_fnc_2D_init!,u0,tspan,p)

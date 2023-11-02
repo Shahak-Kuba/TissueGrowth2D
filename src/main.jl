@@ -11,12 +11,12 @@ using CurveFit
 include("MechanicalEqns.jl")
 include("PoreBoundaries.jl")
 include("PlottingFncs.jl")
-include("GeometrySolvers.jl")
-include("TissueGrowthODEproblem.jl")
-include("Misc.jl")
-include("DataStructs.jl")
 include("Simulation_1D.jl")
 include("Simulation_2D.jl")
+include("TissueGrowthODEproblem.jl")
+include("GeometrySolvers.jl")
+include("Misc.jl")
+include("DataStructs.jl")
 include("PostSimulation.jl")
 
 
