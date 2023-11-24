@@ -58,7 +58,7 @@ function plotResults1D(u, var)
             colormap=:jet, linewidth=5)
     end
     Colorbar(f[1, 2], limits=CRange, colormap=:jet,
-        flipaxis=false, label="v [mm/day]")
+        flipaxis=false, label="v [mm/day]") 
     return f
 end
 

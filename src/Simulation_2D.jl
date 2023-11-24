@@ -5,9 +5,9 @@ function sim2D()
     M = Int(m*N) # total number of springs along the interface
     #N = 500
     R₀ = 1  # shape radius
-    kₛ = 0.01
+    kₛ = 0.005
     l₀ = 1e-3
-    kf = 0.07
+    kf = 0.04
     η = 1
     Tmax = 75 # days
     δt = 0.0005

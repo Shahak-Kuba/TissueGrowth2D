@@ -1,17 +1,17 @@
 """
 δ is the length between two nodes in the positive direction
 """
-δ(rᵢ₊₁, rᵢ) = √((rᵢ₊₁[1] - rᵢ[1])^2 + (rᵢ₊₁[2] - rᵢ[2])^2)
+δ(rᵢ₊₁, rᵢ) = .√(sum((rᵢ₊₁ - rᵢ).^2,dims=size(rᵢ)))
 
 """
 τ calculates the unit tangent vector between two neighbouring points rᵢ₊₁ and rᵢ₋₁ of a central point rᵢ
 """
-τ(rᵢ₊₁, rᵢ₋₁) = (rᵢ₊₁ .- rᵢ₋₁) / δ(rᵢ₊₁, rᵢ₋₁)
+τ(rᵢ₊₁, rᵢ₋₁) = (rᵢ₊₁ - rᵢ₋₁) ./ δ(rᵢ₊₁, rᵢ₋₁)
 
 """
 n calculates the unit normal vector between two neighbouring points rᵢ₊₁ and rᵢ₋₁ of a central point rᵢ
 """
-n(rᵢ₊₁, rᵢ₋₁) = [-τ(rᵢ₊₁, rᵢ₋₁)[2]; τ(rᵢ₊₁, rᵢ₋₁)[1]]
+n(rᵢ₊₁, rᵢ₋₁) = [-τ(rᵢ₊₁, rᵢ₋₁)[:,2], τ(rᵢ₊₁, rᵢ₋₁)[:,1]]
 #n(rᵢ₊₁, rᵢ₋₁) = (τv = τ(rᵢ₊₁, rᵢ₋₁);return (-τv[2], τv[1]))
 
 """
@@ -21,7 +21,7 @@ l₀ = resting length of the spring
 kₛ = spring coefficient
 """
 
-Fₛ⁺(rᵢ, rᵢ₊₁, rᵢ₋₁, kₛ, l₀) = kₛ * l₀^2 * (1 / l₀ - 1 / δ(rᵢ₊₁, rᵢ)) * τ(rᵢ₊₁, rᵢ)
+Fₛ⁺(rᵢ, rᵢ₊₁, rᵢ₋₁, kₛ, l₀) = kₛ .* l₀.^2 .* (ones(size(rᵢ,1),1) ./ l₀ - 1 ./ δ(rᵢ₊₁, rᵢ)) .* τ(rᵢ₊₁, rᵢ)
 
 """
 Fₛ⁻ is the spring force (Nonlinear) used for mechanical relaxation in the negative direction.
@@ -30,12 +30,12 @@ l₀ = resting length of the spring
 kₛ = spring coefficient
 """
 
-Fₛ⁻(rᵢ, rᵢ₊₁, rᵢ₋₁, kₛ, l₀) = -kₛ * l₀^2 * (1 / l₀ - 1 / δ(rᵢ, rᵢ₋₁)) * τ(rᵢ, rᵢ₋₁)
+Fₛ⁻(rᵢ, rᵢ₊₁, rᵢ₋₁, kₛ, l₀) = -kₛ .* l₀.^2 .* (ones(size(rᵢ,1),1) ./ l₀ - 1 ./ δ(rᵢ, rᵢ₋₁)) .* τ(rᵢ, rᵢ₋₁)
 
 """
 
 """
-ρ(rᵢ₊₁, rᵢ) = 1 / δ(rᵢ₊₁, rᵢ);
+ρ(rᵢ₊₁, rᵢ) = 1 ./ δ(rᵢ₊₁, rᵢ);
 
 """
 Vₙ is the normal velocity of the interface such that Vₙ ∝ ρ
@@ -48,18 +48,18 @@ kf = the amount of tissue produced per unit area per unit time
 function Vₙ(rᵢ₋₁, rᵢ, rᵢ₊₁, kf, δt)
     ρₗ = ρ(rᵢ, rᵢ₋₁)
     ρᵣ = ρ(rᵢ₊₁, rᵢ)
-    Vₗ = kf * ρₗ
-    Vᵣ = kf * ρᵣ
+    Vₗ = kf .* ρₗ
+    Vᵣ = kf .* ρᵣ
 
     nₗ = n(rᵢ₋₁, rᵢ)
     nᵣ = n(rᵢ, rᵢ₊₁)
 
-    rₘ₁ = rᵢ - Vₗ * nₗ * δt
-    rₗ = rᵢ₋₁ - Vₗ * nₗ * δt
-    rₘ₂ = rᵢ - Vᵣ * nᵣ * δt
-    rᵣ = rᵢ₊₁ - Vᵣ * nᵣ * δt
+    rₘ₁ = rᵢ' - Vₗ * nₗ * δt
+    rₗ = rᵢ₋₁' - Vₗ * nₗ * δt
+    rₘ₂ = rᵢ' - Vᵣ * nᵣ * δt
+    rᵣ = rᵢ₊₁' - Vᵣ * nᵣ * δt
 
-    return (lineIntersection(rₘ₁, rₗ, rₘ₂, rᵣ) - rᵢ) / δt
+    return (lineIntersection(rₘ₁, rₗ, rₘ₂, rᵣ) - rᵢ') / δt
 end
 
 function LVₙ(rᵢ₋₁, rᵢ, rᵢ₊₁, kf, δt)
