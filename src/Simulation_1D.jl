@@ -1,6 +1,6 @@
 function sim1D()
     # setting up simulation parameters
-    N = 120 # number of cells
+    N = 30 # number of cells
     m = 2 # number of springs per cell
     M = m*N # total number of springs along the interface
     R₀ = 1  # shape radius

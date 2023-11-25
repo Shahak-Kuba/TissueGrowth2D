@@ -39,12 +39,12 @@ end
 function ODE_fnc_1D!(du,u,p,t) 
     N,kₛ,η,kf,l₀,δt = p
     dom = 2*pi;
-    du[1,:] = (1/η) .* dot(Fₛ⁺(u,circshift(u,1),circshift(u,-1)-[dom, 0],kₛ,l₀) + Fₛ⁻(u,circshift(u,1),circshift(u,-1)-[dom, 0],kₛ,l₀), τ(circshift(u,1),circshift(u,-1)-[dom, 0]))*τ(circshift(u,1),circshift(u,-1)-[dom, 0]) +
-                Vₙ(circshift(u,-1)-[dom, 0],u,circshift(u,1),kf,δt)
-    du[2:end-1,:] = (1/η) .* dot(Fₛ⁺(u,circshift(u,1),circshift(u,-1),kₛ,l₀) + Fₛ⁻(u,circshift(u,1),circshift(u,-1),kₛ,l₀), τ(circshift(u,1),circshift(u,-1)))*τ(circshift(u,1),circshift(u,-1)) +
-                Vₙ(circshift(u,-1),u,circshift(u,1),kf,δt)
-    du[end,:] = (1/η) .* dot(Fₛ⁺(u,circshift(u,1)+[dom, 0],circshift(u,-1),kₛ,l₀) + Fₛ⁻(u,circshift(u,1)+[dom, 0],circshift(u,-1),kₛ,l₀), τ(circshift(u,1)+[dom, 0],circshift(u,-1)))*τ(circshift(u,1)+[dom, 0],circshift(u,-1)) +
-                Vₙ(circshift(u,-1),u,circshift(u,1)+[dom, 0],kf,δt)
+    du[1,:] .= ((1/η) .* dot(Fₛ⁺(u,circshift(u,1),circshift(u,-1).-[dom 0],kₛ,l₀) + Fₛ⁻(u,circshift(u,1),circshift(u,-1).-[dom 0],kₛ,l₀), τ(circshift(u,1),circshift(u,-1).-[dom 0]))*τ(circshift(u,1),circshift(u,-1).-[dom 0]) +
+                Vₙ(circshift(u,-1).-[dom 0],u,circshift(u,1),kf,δt))[1,:]
+    du[2:end-1,:] .= ((1/η) .* dot(Fₛ⁺(u,circshift(u,1),circshift(u,-1),kₛ,l₀) + Fₛ⁻(u,circshift(u,1),circshift(u,-1),kₛ,l₀), τ(circshift(u,1),circshift(u,-1)))*τ(circshift(u,1),circshift(u,-1)) +
+                Vₙ(circshift(u,-1),u,circshift(u,1),kf,δt))[2:end-1,:]
+    du[end,:] .= ((1/η) .* dot(Fₛ⁺(u,circshift(u,1).+[dom 0],circshift(u,-1),kₛ,l₀) + Fₛ⁻(u,circshift(u,1).+[dom 0],circshift(u,-1),kₛ,l₀), τ(circshift(u,1).+[dom 0],circshift(u,-1)))*τ(circshift(u,1).+[dom 0],circshift(u,-1)) +
+                Vₙ(circshift(u,-1),u,circshift(u,1).+[dom 0],kf,δt))[end,:]
                 """
     @views for i in 1:N
         if i == 1
@@ -121,7 +121,7 @@ function SetupODEproblem1D(btype,N,R₀,kₛ,η,kf,l₀,δt,Tmax)
     η = η/N
     kf = kf/N
     # setting up initial conditions
-    u0 = u0SetUp(btype,R₀,N)'
+    u0 = u0SetUp(btype,R₀,N)
     # solving ODE problem
     p = (N,kₛ,η,kf,l₀,δt)
     tspan = (0.0,Tmax)

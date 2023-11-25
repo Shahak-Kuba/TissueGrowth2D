@@ -11,7 +11,7 @@
 """
 n calculates the unit normal vector between two neighbouring points rᵢ₊₁ and rᵢ₋₁ of a central point rᵢ
 """
-n(rᵢ₊₁, rᵢ₋₁) = [-τ(rᵢ₊₁, rᵢ₋₁)[:,2], τ(rᵢ₊₁, rᵢ₋₁)[:,1]]
+n(rᵢ₊₁, rᵢ₋₁) = oftype(τ(rᵢ₊₁, rᵢ₋₁),vcat(transpose.([-τ(rᵢ₊₁, rᵢ₋₁)[:,2], τ(rᵢ₊₁, rᵢ₋₁)[:,1]])...)')
 #n(rᵢ₊₁, rᵢ₋₁) = (τv = τ(rᵢ₊₁, rᵢ₋₁);return (-τv[2], τv[1]))
 
 """
@@ -54,12 +54,12 @@ function Vₙ(rᵢ₋₁, rᵢ, rᵢ₊₁, kf, δt)
     nₗ = n(rᵢ₋₁, rᵢ)
     nᵣ = n(rᵢ, rᵢ₊₁)
 
-    rₘ₁ = rᵢ' - Vₗ * nₗ * δt
-    rₗ = rᵢ₋₁' - Vₗ * nₗ * δt
-    rₘ₂ = rᵢ' - Vᵣ * nᵣ * δt
-    rᵣ = rᵢ₊₁' - Vᵣ * nᵣ * δt
+    rₘ₁ = (rᵢ - (Vₗ .* nₗ)) .* δt
+    rₗ = rᵢ₋₁ - Vₗ .* nₗ .* δt
+    rₘ₂ = rᵢ - Vᵣ .* nᵣ .* δt
+    rᵣ = rᵢ₊₁ - Vᵣ .* nᵣ .* δt
 
-    return (lineIntersection(rₘ₁, rₗ, rₘ₂, rᵣ) - rᵢ') / δt
+    return (lineIntersection(rₘ₁, rₗ, rₘ₂, rᵣ) - rᵢ) ./ δt
 end
 
 function LVₙ(rᵢ₋₁, rᵢ, rᵢ₊₁, kf, δt)
@@ -71,7 +71,7 @@ end
 
 function RVₙ(rᵢ₋₁, rᵢ, rᵢ₊₁, kf, δt)
     ρᵣ = ρ(rᵢ₊₁, rᵢ)
-    V = kf*ρᵣ
+    V = kf.*ρᵣ
     nv = [0;1]
     return nv*V
 end
