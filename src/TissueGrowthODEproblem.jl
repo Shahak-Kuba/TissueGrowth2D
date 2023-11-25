@@ -39,26 +39,14 @@ end
 function ODE_fnc_1D!(du,u,p,t) 
     N,kₛ,η,kf,l₀,δt = p
     dom = 2*pi;
-    du[1,:] .= ((1/η) .* dot(Fₛ⁺(u,circshift(u,1),circshift(u,-1).-[dom 0],kₛ,l₀) + Fₛ⁻(u,circshift(u,1),circshift(u,-1).-[dom 0],kₛ,l₀), τ(circshift(u,1),circshift(u,-1).-[dom 0]))*τ(circshift(u,1),circshift(u,-1).-[dom 0]) +
-                Vₙ(circshift(u,-1).-[dom 0],u,circshift(u,1),kf,δt))[1,:]
-    du[2:end-1,:] .= ((1/η) .* dot(Fₛ⁺(u,circshift(u,1),circshift(u,-1),kₛ,l₀) + Fₛ⁻(u,circshift(u,1),circshift(u,-1),kₛ,l₀), τ(circshift(u,1),circshift(u,-1)))*τ(circshift(u,1),circshift(u,-1)) +
-                Vₙ(circshift(u,-1),u,circshift(u,1),kf,δt))[2:end-1,:]
-    du[end,:] .= ((1/η) .* dot(Fₛ⁺(u,circshift(u,1).+[dom 0],circshift(u,-1),kₛ,l₀) + Fₛ⁻(u,circshift(u,1).+[dom 0],circshift(u,-1),kₛ,l₀), τ(circshift(u,1).+[dom 0],circshift(u,-1)))*τ(circshift(u,1).+[dom 0],circshift(u,-1)) +
-                Vₙ(circshift(u,-1),u,circshift(u,1).+[dom 0],kf,δt))[end,:]
-                """
-    @views for i in 1:N
-        if i == 1
-            @inbounds du[:,i] .= (1/η) .* dot(Fₛ⁺(u[:,i],u[:,i+1],u[:,N]-[dom, 0] ,kₛ,l₀) + Fₛ⁻(u[:,i],u[:,i+1],u[:,N]-[dom, 0],kₛ,l₀), τ(u[:,i+1],u[:,N]-[dom, 0]))*τ(u[:,i+1],u[:,N]-[dom, 0]) +
-            Vₙ(u[:,N]-[dom, 0],u[:,i],u[:,i+1],kf,δt)
-        elseif i == N
-            @inbounds du[:,i] .= (1/η) .* dot(Fₛ⁺(u[:,i],u[:,1]+[dom, 0],u[:,i-1],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,1]+[dom, 0],u[:,i-1],kₛ,l₀), τ(u[:,1]+[dom, 0],u[:,i-1]))*τ(u[:,1]+[dom, 0],u[:,i-1]) +
-            Vₙ(u[:,i-1],u[:,i],u[:,1]+[dom, 0],kf,δt)
-        else
-            @inbounds du[:,i] .= (1/η) .* dot(Fₛ⁺(u[:,i],u[:,i+1],u[:,i-1],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,i+1],u[:,i-1],kₛ,l₀), τ(u[:,i+1],u[:,i-1]))*τ(u[:,i+1],u[:,i-1]) +
-            Vₙ(u[:,i-1],u[:,i],u[:,i+1],kf,δt)
-        end 
-    end
-    """
+    uᵢ₊₁ = circshift(u,1)
+    uᵢ₋₁ = circshift(u,-1)
+    du[1,:] .= ((1/η) .* dot(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁.-[dom 0],kₛ,l₀) + Fₛ⁻(u,uᵢ₊₁,uᵢ₋₁.-[dom 0],kₛ,l₀), τ( uᵢ₊₁,uᵢ₋₁.-[dom 0]))*τ( uᵢ₊₁,uᵢ₋₁.-[dom 0]) +
+                Vₙ(uᵢ₋₁.-[dom 0],u, uᵢ₊₁,kf,δt))[1,:]
+    du[2:end-1,:] .= ((1/η) .* dot(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀), τ(uᵢ₊₁,uᵢ₋₁))*τ(uᵢ₊₁,uᵢ₋₁) +
+                Vₙ(uᵢ₋₁,u,uᵢ₊₁,kf,δt))[2:end-1,:]
+    du[end,:] .= ((1/η) .* dot(Fₛ⁺(u,uᵢ₊₁.+[dom 0],uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u,uᵢ₊₁.+[dom 0],uᵢ₋₁,kₛ,l₀), τ(uᵢ₊₁.+[dom 0],uᵢ₋₁))*τ(uᵢ₊₁.+[dom 0],uᵢ₋₁) +
+                Vₙ(uᵢ₋₁,u,uᵢ₊₁.+[dom 0],kf,δt))[end,:]
     nothing
 end
 
@@ -77,6 +65,7 @@ function ODE_fnc_2D_init!(du,u,p,t)
     nothing
 end
 
+"""
 function ODE_fnc_2D!(du,u,p,t) 
     N,kₛ,η,kf,l₀,δt = p
     @views for i in 1:N
@@ -91,6 +80,30 @@ function ODE_fnc_2D!(du,u,p,t)
             Vₙ(u[:,i-1],u[:,i],u[:,i+1],kf,δt)
         end 
     end
+    nothing
+end
+"""
+
+function ODE_fnc_2D!(du,u,p,t) 
+    N,kₛ,η,kf,l₀,δt = p
+    uᵢ₊₁ = circshift(u,1)
+    uᵢ₋₁ = circshift(u,-1)
+    du .= (1/η) .* dot(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀), τ(uᵢ₊₁,uᵢ₋₁))*τ(uᵢ₊₁,uᵢ₋₁) +
+                        Vₙ(uᵢ₋₁,u,uᵢ₊₁,kf,δt)
+    """
+    @views for i in 1:N
+        if i == 1
+            @inbounds du[:,i] .= (1/η) .* dot(Fₛ⁺(u[:,i],u[:,i+1],u[:,N],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,i+1],u[:,N],kₛ,l₀), τ(u[:,i+1],u[:,N]))*τ(u[:,i+1],u[:,N]) +
+            Vₙ(u[:,N],u[:,i],u[:,i+1],kf,δt)
+        elseif i == N
+            @inbounds du[:,i] .= (1/η) .* dot(Fₛ⁺(u[:,i],u[:,1],u[:,i-1],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,1],u[:,i-1],kₛ,l₀), τ(u[:,1],u[:,i-1]))*τ(u[:,1],u[:,i-1]) +
+            Vₙ(u[:,i-1],u[:,i],u[:,1],kf,δt)
+        else
+            @inbounds du[:,i] .= (1/η) .* dot(Fₛ⁺(u[:,i],u[:,i+1],u[:,i-1],kₛ,l₀) + Fₛ⁻(u[:,i],u[:,i+1],u[:,i-1],kₛ,l₀), τ(u[:,i+1],u[:,i-1]))*τ(u[:,i+1],u[:,i-1]) +
+            Vₙ(u[:,i-1],u[:,i],u[:,i+1],kf,δt)
+        end 
+    end
+    """
     nothing
 end
 

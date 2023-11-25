@@ -1,6 +1,6 @@
 function sim1D()
     # setting up simulation parameters
-    N = 30 # number of cells
+    N = 80 # number of cells
     m = 2 # number of springs per cell
     M = m*N # total number of springs along the interface
     R₀ = 1  # shape radius
@@ -24,8 +24,8 @@ function sim1D()
         prob, p = SetupODEproblem1D(btype, M, R₀, kₛ, η, kf, l₀, δt, Tmax)
         @time sol = solve(prob, Euler(), save_everystep = false, saveat=savetimes, dt=δt)
         #@btime sol = solve(prob, Euler(), saveat=savetimes, dt=δt)
-        push!(results, postSimulation1D(btype, sol, p))
-        printInfo(ii,length(kₛ_Array),btype,M,kₛ,η,kf)
+        #push!(results, postSimulation1D(btype, sol, p))
+        #printInfo(ii,length(kₛ_Array),btype,M,kₛ,η,kf)
     end
 
     return results
