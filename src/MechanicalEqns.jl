@@ -54,10 +54,10 @@ function Vₙ(rᵢ₋₁, rᵢ, rᵢ₊₁, kf, δt)
     nₗ = n(rᵢ₋₁, rᵢ)
     nᵣ = n(rᵢ, rᵢ₊₁)
 
-    rₘ₁ = (rᵢ - (Vₗ .* nₗ)) .* δt
-    rₗ = rᵢ₋₁ - Vₗ .* nₗ .* δt
-    rₘ₂ = rᵢ - Vᵣ .* nᵣ .* δt
-    rᵣ = rᵢ₊₁ - Vᵣ .* nᵣ .* δt
+    rₘ₁ = rᵢ - (Vₗ .* nₗ .* δt)
+    rₗ = rᵢ₋₁ - (Vₗ .* nₗ .* δt)
+    rₘ₂ = rᵢ - (Vᵣ .* nᵣ .* δt)
+    rᵣ = rᵢ₊₁ - (Vᵣ .* nᵣ .* δt)
 
     return (lineIntersection(rₘ₁, rₗ, rₘ₂, rᵣ) - rᵢ) ./ δt
 end

@@ -1,11 +1,13 @@
 function PostCalcs1D(u, p)
     N, kₛ, η, kf, l₀, δt = p
 
-    ∑F = zeros(size(u, 2))
-    density = zeros(size(u, 2))
-    vₙ = zeros(size(u, 2))
-    ψ = zeros(size(u, 2))
-    Κ = zeros(size(u, 2))
+    ∑F = zeros(size(u, 1))
+    density = zeros(size(u, 1))
+    vₙ = zeros(size(u, 1))
+    ψ = zeros(size(u, 1))
+    Κ = zeros(size(u, 1))
+
+    """
 
     for i in axes(u, 2)
         if i == 1
@@ -30,6 +32,13 @@ function PostCalcs1D(u, p)
             @views Κ[i] = κ(u[:, i-1], u[:, i], u[:, i+1])
         end
     end
+    """
+
+    uᵢ₊₁ = circshift(u,1)
+    uᵢ₋₁ = circshift(u,-1)
+
+    ∑F = dot(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀), τ(uᵢ₊₁,uᵢ₋₁))
+
 
     return ∑F, vₙ, density, ψ, Κ
 end
@@ -73,12 +82,13 @@ end
 function PostCalcs2D(u, p)
     N, kₛ, η, kf, l₀, δt = p
 
-    ∑F = zeros(size(u, 2))
-    density = zeros(size(u, 2))
-    vₙ = zeros(size(u, 2))
-    ψ = zeros(size(u, 2))
-    Κ = zeros(size(u, 2))
+    ∑F = zeros(size(u, 1))
+    density = zeros(size(u, 1))
+    vₙ = zeros(size(u, 1))
+    ψ = zeros(size(u, 1))
+    Κ = zeros(size(u, 1))
 
+    """
     for i in axes(u, 2)
         if i == 1
             @views ∑F[i] = abs((1 / η) * dot(Fₛ⁺(u[:, i], u[:, i+1], u[:, N], kₛ, l₀) + Fₛ⁻(u[:, i], u[:, i+1], u[:, N], kₛ, l₀), τ(u[:, i+1], u[:, N])))
@@ -102,6 +112,14 @@ function PostCalcs2D(u, p)
             @views Κ[i] = κ(u[:, i-1], u[:, i], u[:, i+1])
         end
     end
+    """
+
+    uᵢ₊₁ = circshift(u,1)
+    uᵢ₋₁ = circshift(u,-1)
+    ∑F = row_dot(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀), τ(uᵢ₊₁,uᵢ₋₁))
+    density = ρ(uᵢ₊₁, u)
+    ψ = ∑F ./ δ(uᵢ₊₁, u)
+    #Κ[i] = κ(u[:, i-1], u[:, i], u[:, i+1])
 
     return ∑F, vₙ, density, ψ, Κ
 end
@@ -127,11 +145,13 @@ function postSimulation2D(btype, sol, p)
         Area[ii] = Ω(sol.u[ii]) # area calculation
         #append!(sol.u[ii], sol.u[ii][:,1]) # closing the domain Ω
         Fnet, nV, den, stre, kap = PostCalcs2D(sol.u[ii], p)
+        """
         push!(∑F, Fnet)
         push!(vₙ, nV)
         push!(density, den)
         push!(ψ, stre)
         push!(Κ, kap)
+        """
     end
 
     return SimResults_t(btype, sol.t, sol.u, ∑F, density, vₙ, Area, ψ, Κ)
