@@ -34,7 +34,7 @@ function plotResults2D(u, var)
     CRange = findMinMax(var)
     #CRange = (20,60)
     for i in eachindex(u)
-        lines!(gaxmain, u[i][1, :], u[i][2, :], color=var[i], colorrange=CRange,
+        lines!(gaxmain, u[i][:, 1], u[i][:, 2], color=var[i], colorrange=CRange,
             colormap=:jet, linewidth=5)
     end
     Colorbar(f[1, 2], limits=CRange, colormap=:jet,

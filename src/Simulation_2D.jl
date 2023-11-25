@@ -9,7 +9,7 @@ function sim2D()
     l₀ = 1e-3
     kf = 0.04
     η = 1
-    Tmax = 20 # days
+    Tmax = 50 # days
     δt = 0.0005
     btypes = ["circle", "triangle", "square", "hex"]
     savetimes = LinRange(0, Tmax, 10)
