@@ -145,13 +145,11 @@ function postSimulation2D(btype, sol, p)
         Area[ii] = Ω(sol.u[ii]) # area calculation
         #append!(sol.u[ii], sol.u[ii][:,1]) # closing the domain Ω
         Fnet, nV, den, stre, kap = PostCalcs2D(sol.u[ii], p)
-        """
-        push!(∑F, Fnet)
+        push!(∑F, vcat(Fnet...))
         push!(vₙ, nV)
-        push!(density, den)
-        push!(ψ, stre)
+        push!(density, vcat(den...))
+        push!(ψ, vcat(stre...))
         push!(Κ, kap)
-        """
     end
 
     return SimResults_t(btype, sol.t, sol.u, ∑F, density, vₙ, Area, ψ, Κ)

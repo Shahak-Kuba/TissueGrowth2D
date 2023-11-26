@@ -1,34 +1,39 @@
 function lineIntersection(rₘ₁,rₗ,rₘ₂,rᵣ)
+    intersect = zeros(size(rₘ₁))
     r = rₗ.-rₘ₁
     s = rᵣ.-rₘ₂
     
-    d = r[1]*s[2] - r[2]*s[1]
+    d = r[:,1].*s[:,2] - r[:,2].*s[:,1]
     # performing determinant test in case lines are parallel
-    if d == 0
-        return (rₘ₁ + rₘ₂)/2
-    end
+    for i in 1:size(d,1)
+        if d[i] == 0
+            intersect[i,:] = (rₘ₁[i,:] + rₘ₂[i,:])./2
+        
+        else
+            u = ((rₘ₂[i,1] - rₘ₁[i,1])*r[i,2] - (rₘ₂[i,2] - rₘ₁[i,2])*r[i,1])/d[i]
+            t = ((rₘ₂[i,1] - rₘ₁[i,1])*s[i,2] - (rₘ₂[i,2] - rₘ₁[i,2])*s[i,1])/d[i]
 
-    u = ((rₘ₂[1] - rₘ₁[1])*r[2] - (rₘ₂[2] - rₘ₁[2])*r[1])/d
-    t = ((rₘ₂[1] - rₘ₁[1])*s[2] - (rₘ₂[2] - rₘ₁[2])*s[1])/d
-
-    if 0≤u≤1 && 0≤t≤1
-        #println("Yes these intersect at: ")
-        #println(rₘ₁ + t*r)
-        return (rₘ₁ + t*r)
-    else
-        #println("No these lines dont intersect, midpoint: " )
-        #println(((rₘ₁ + rₘ₂)/2))
-        return (rₘ₁ + rₘ₂)/2
+            if 0≤u≤1 && 0≤t≤1
+                #println("Yes these intersect at: ")
+                #println(rₘ₁ + t*r)
+                intersect[i,:] = (rₘ₁[i,:] + t*r[i,:])
+            else
+                #println("No these lines dont intersect, midpoint: " )
+                #println(((rₘ₁ + rₘ₂)/2))
+                intersect[i,:] =  (rₘ₁[i,:] + rₘ₂[i,:])/2
+            end
+        end
     end
+    return intersect
 end
 
 function Ω(p)
     A = 0
     for ii in axes(p,2)
         if ii == size(p,2)
-            A += (p[1,ii]*p[2,1] -  p[2,ii]*p[1,1])
+            A += (p[ii,1]*p[1,2] -  p[ii,2]*p[1,1])
         else
-            A += (p[1,ii]*p[2,ii+1] -  p[2,ii]*p[1,ii+1])
+            A += (p[ii,1]*p[ii+1,2] -  p[ii,2]*p[ii+1,1])
         end
     end
     return abs(A)/2;
