@@ -37,7 +37,7 @@ function PostCalcs1D(u, p)
     uᵢ₊₁ = circshift(u,1)
     uᵢ₋₁ = circshift(u,-1)
 
-    ∑F = dot(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀), τ(uᵢ₊₁,uᵢ₋₁))
+    #∑F = diag((Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀)) * transpose(τ(uᵢ₊₁,uᵢ₋₁)))
 
 
     return ∑F, vₙ, density, ψ, Κ
@@ -61,6 +61,7 @@ function postSimulation1D(btype, sol, p)
     vₙ = Vector{Vector{Float64}}(undef, 0)
     Κ = Vector{Vector{Float64}}(undef, 0)
 
+    
     for ii in axes(sol.u, 1)
         Area[ii] = Ω(sol.u[ii]) # area calculation
         #append!(sol.u[ii], sol.u[ii][:,1]) # closing the domain Ω
@@ -71,6 +72,12 @@ function postSimulation1D(btype, sol, p)
         push!(ψ, stre)
         push!(Κ, kap)
     end
+
+    uᵢ₊₁ = circshift(u,1)
+    uᵢ₋₁ = circshift(u,-1)
+    ∑F = row_dot(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀), τ(uᵢ₊₁,uᵢ₋₁))
+    density = ρ(uᵢ₊₁, u)
+    ψ = ∑F ./ δ(uᵢ₊₁, u)
 
     return SimResults_t(btype, sol.t, sol.u, ∑F, density, vₙ, Area, ψ, Κ)
 end
@@ -116,7 +123,7 @@ function PostCalcs2D(u, p)
 
     uᵢ₊₁ = circshift(u,1)
     uᵢ₋₁ = circshift(u,-1)
-    ∑F = row_dot(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀), τ(uᵢ₊₁,uᵢ₋₁))
+    ∑F = diag((Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀)) * transpose(τ(uᵢ₊₁,uᵢ₋₁)))
     density = ρ(uᵢ₊₁, u)
     ψ = ∑F ./ δ(uᵢ₊₁, u)
     #Κ[i] = κ(u[:, i-1], u[:, i], u[:, i+1])
