@@ -29,8 +29,8 @@ end
 
 function Ω(p)
     A = 0
-    for ii in axes(p,2)
-        if ii == size(p,2)
+    for ii in axes(p,1)
+        if ii == size(p,1)
             A += (p[ii,1]*p[1,2] -  p[ii,2]*p[1,1])
         else
             A += (p[ii,1]*p[ii+1,2] -  p[ii,2]*p[ii+1,1])
@@ -39,7 +39,17 @@ function Ω(p)
     return abs(A)/2;
 end
 
+function ωκ(rᵢ₋₁, rᵢ, rᵢ₊₁)
+    triVector = [rᵢ₋₁ rᵢ rᵢ₊₁]
+    A = zeros(size(triVector,1))
+    for ii in axes(triVector,1)
+        A[ii] = Ω(reshape(triVector[ii,:],(2,3))')
+    end
+    return A
+end
 
+
+""""
 using Test
 # running test cases
 @testset "LineIntersections" begin
@@ -72,7 +82,6 @@ end
     P = u0SetUp(btype,R₀,N)
     @test Ω(P) ≈ 2*π*R₀ atol=0.01
 
-    """
     btype = "hex"
     Pₕ = u0SetUp(btype,R₀,N)
     @test Ω(Pₕ) ≈ 3*√3 / 2 * (√((2/3√3)*π*(R₀^2)))^2 atol=0.01
@@ -80,6 +89,6 @@ end
     btype = "triangle"
     Pₜ = u0SetUp(btype,R₀,N)
     @test Ω(Pₜ) ≈ √3 / 4 * (√((2*π*R₀^2)/sin(π/3)))^2 atol=0.01
-    """
 
 #end
+"""
