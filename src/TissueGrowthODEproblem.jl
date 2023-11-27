@@ -88,7 +88,10 @@ function ODE_fnc_2D!(du,u,p,t)
     N,kₛ,η,kf,l₀,δt = p
     uᵢ₊₁ = circshift(u,1)
     uᵢ₋₁ = circshift(u,-1)
-    du .= (1/η) .* row_dot(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀), τ(uᵢ₊₁,uᵢ₋₁)).*τ(uᵢ₊₁,uᵢ₋₁) +
+    #du .= (1/η) .* row_dot(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀), τ(uᵢ₊₁,uᵢ₋₁)).*τ(uᵢ₊₁,uᵢ₋₁) +
+    #                   Vₙ(uᵢ₋₁,u,uᵢ₊₁,kf,δt)
+
+    du .= (1/η) .* diag((Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀)) * transpose(τ(uᵢ₊₁,uᵢ₋₁))).*τ(uᵢ₊₁,uᵢ₋₁) +
                        Vₙ(uᵢ₋₁,u,uᵢ₊₁,kf,δt)
 
     """
