@@ -51,6 +51,37 @@ Yₕ(R,T) = ((0<=T) & (T<=1)) * (Vertex(R)[2,1] +
     ((5<T) & (T<6))  * (Vertex(R)[2,6] + 
     (T-5)*(Vertex(R)[2,7] - Vertex(R)[2,6]))
 
+Xᵩ(T) = T
+Yᵩ(T) = 2 + 0.5*cos(3*T)
+
+
+function initial_pos_1D(u0,N,η,kf,l₀)
+    kₛ = 0.2*N
+    η = η/N
+    kf = kf/N
+    Tmax = 10;
+    δt = 0.01
+    p = (N,kₛ,η,kf,l₀,δt)
+    tspan = (0.0,Tmax)
+    prob = ODEProblem(ODE_fnc_1D_init!,u0,tspan,p)
+    savetimes = LinRange(0, Tmax, 2)
+    init_pos = solve(prob, Euler(), save_everystep = false, saveat=savetimes, dt=δt)
+    return init_pos.u[2]
+end
+
+function initial_pos_2D(u0,N,η,kf,l₀)
+    kₛ = 0.2*N
+    η = η/N
+    kf = kf/N
+    Tmax = 10;
+    δt = 0.0005
+    p = (N,kₛ,η,kf,l₀,δt)
+    tspan = (0.0,Tmax)
+    prob = ODEProblem(ODE_fnc_2D_init!,u0,tspan,p)
+    savetimes = LinRange(0, Tmax, 2)
+    init_pos = solve(prob, Euler(), save_everystep = false, saveat=savetimes, dt=δt)
+    return init_pos.u[2]
+end
 
 function u0SetUp(btype,R₀,N)
     # setting up initial conditions
@@ -70,7 +101,21 @@ function u0SetUp(btype,R₀,N)
         elseif btype == "hex"
             R = √((2/3√3)*π*(R₀^2)) # to produce identical areas
             @views u0[:,i] .= [Xₕ(R,θ[i]*3/pi), Yₕ(R,θ[i]*3/pi)]
+        elseif btype == "SineWave"
+            θ = collect(LinRange(0.0, 2*π, N+1))  # just use collect(θ) to convert into a vector
+            #pop!(θ)
+            @views u0[:,i] .= [Xᵩ(θ[i]), Yᵩ(θ[i])];
         end
     end
-    return u0
+
+    
+    if btype == "SineWave"
+        relax_pos = initial_pos_1D(u0',N,1,0,1e-3)
+    else
+        relax_pos = initial_pos_2D(u0',N,1,0,1e-3)
+    end
+
+    #return oftype(relax_pos, relax_pos')
+    return relax_pos
 end
+
