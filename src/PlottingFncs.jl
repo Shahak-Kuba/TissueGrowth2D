@@ -23,7 +23,7 @@ end
 
 # Colormaps available at: https://docs.juliahub.com/MakieGallery/Ql23q/0.2.17/generated/colors.html#Colormaps
 
-function plotResults2D(u, var)
+function plotResults2D(u, var, cmap)
     #f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
     #    resolution=(500, 500))
     f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
@@ -32,12 +32,12 @@ function plotResults2D(u, var)
     gaxmain = Axis(ga[1, 1], limits=(-1.5, 1.5, -1.5, 1.5), aspect=DataAspect(), xlabel="x", ylabel="y")
     #gaxmain = Axis(ga[1, 1], limits=(0, 2*pi, 1, 8), aspect=DataAspect(), xlabel="x", ylabel="y")
     #CRange = findMinMax(var)
-    CRange = (0,160)
+    CRange = (0,120)
     for i in eachindex(u)
-        lines!(gaxmain, u[i][:, 1], u[i][:, 2], color=var[i].data, colorrange=CRange,
-            colormap=:jet, linewidth=5)
+        lines!(gaxmain, [u[i][:, 1]; u[i][1,1]], [u[i][:, 2]; u[i][1,2]], color=[var[i].data; var[i].data[1]], colorrange=CRange,
+            colormap=cmap, linewidth=5)
     end
-    Colorbar(f[1, 2], limits=CRange, colormap=:jet,
+    Colorbar(f[1, 2], limits=CRange, colormap=cmap,
         flipaxis=false, label="ρ [μm²]")
     return f
 end

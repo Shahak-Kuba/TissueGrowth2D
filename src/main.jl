@@ -37,10 +37,11 @@ f = plotResults1D(sols[3].u, sols[3].Vₙ)
 sols = sim2D();
 f = plotAreaVStime(sols)
 
-f = plotResults2D(sols[1].u, sols[1].Density)
-f = plotResults2D(sols[2].u, sols[2].Density)
-f = plotResults2D(sols[3].u, sols[3].Density)
-f = plotResults2D(sols[4].u, sols[4].Density)
+cmap = :gnuplot2
+f = plotResults2D(sols[1].u, sols[1].Density, cmap)
+f = plotResults2D(sols[2].u, sols[2].Density, cmap)
+f = plotResults2D(sols[3].u, sols[3].Density, cmap)
+f = plotResults2D(sols[4].u, sols[4].Density, cmap)
 
 f = plotKapVsVel(sols[1])
 f = plotKapVsVel(sols[2])
