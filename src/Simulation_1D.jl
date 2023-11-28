@@ -4,13 +4,13 @@ function sim1D()
     m = 1 # number of springs per cell
     M = m*N # total number of springs along the interface
     R₀ = 1  # shape radius
-    #kₛ = 0.7
-    kₛ_Array = [0.1, 1, 2]
+    kₛ_Array = [13]
+    #kₛ_Array = [0.1, 1, 2]
     l₀ = 1e-3
     kf = 0.7
     η = 1
     Tmax = 50 # days
-    δt = 0.0005
+    δt = 0.0001
     #btypes = ["circle", "triangle", "square", "hex"]
     btype = "SineWave"
     savetimes = LinRange(0, Tmax, 30)

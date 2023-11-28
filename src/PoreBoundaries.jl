@@ -56,7 +56,7 @@ Yᵩ(T) = 2 + 0.5*cos(3*T)
 
 
 function initial_pos_1D(u0,N,η,kf,l₀)
-    kₛ = 0.2*N
+    kₛ = 2*N
     η = η/N
     kf = kf/N
     Tmax = 10;
