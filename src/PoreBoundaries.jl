@@ -56,7 +56,7 @@ Yᵩ(T) = 2 + 0.5*cos(3*T)
 
 
 function initial_pos_1D(u0,N,η,kf,l₀)
-    kₛ = 0.5*N
+    kₛ = 0.2*N
     η = η/N
     kf = kf/N
     Tmax = 10;
@@ -70,7 +70,7 @@ function initial_pos_1D(u0,N,η,kf,l₀)
 end
 
 function initial_pos_2D(u0,N,η,kf,l₀)
-    kₛ = 0.5*N
+    kₛ = 0.2*N
     η = η/N
     kf = kf/N
     Tmax = 10;
@@ -103,19 +103,19 @@ function u0SetUp(btype,R₀,N)
             @views u0[:,i] .= [Xₕ(R,θ[i]*3/pi), Yₕ(R,θ[i]*3/pi)]
         elseif btype == "SineWave"
             θ = collect(LinRange(0.0, 2*π, N+1))  # just use collect(θ) to convert into a vector
-            pop!(θ)
+            #pop!(θ)
             @views u0[:,i] .= [Xᵩ(θ[i]), Yᵩ(θ[i])];
         end
     end
 
-    """
+    
     if btype == "SineWave"
-        relax_pos = initial_pos_1D(u0,N,1,0,1e-3)
+        relax_pos = initial_pos_1D(u0',N,1,0,1e-3)
     else
-        relax_pos = initial_pos_2D(u0,N,1,0,1e-3)
+        relax_pos = initial_pos_2D(u0',N,1,0,1e-3)
     end
-    """
-    relax_pos = u0
-    return oftype(relax_pos, relax_pos')
+
+    #return oftype(relax_pos, relax_pos')
+    return relax_pos
 end
 

@@ -11,9 +11,14 @@
 """
 n calculates the unit normal vector between two neighbouring points rᵢ₊₁ and rᵢ₋₁ of a central point rᵢ
 """
-n(rᵢ₊₁, rᵢ₋₁) = -oftype(τ(rᵢ₊₁, rᵢ₋₁),vcat(transpose.([-τ(rᵢ₊₁, rᵢ₋₁)[:,2], τ(rᵢ₊₁, rᵢ₋₁)[:,1]])...)')
-#n(rᵢ₊₁, rᵢ₋₁) = (τv = τ(rᵢ₊₁, rᵢ₋₁);return (-τv[2], τv[1]))
-
+function n(rᵢ₊₁, rᵢ₋₁,type) 
+    if type == "2D"
+        -oftype(τ(rᵢ₊₁, rᵢ₋₁),vcat(transpose.([-τ(rᵢ₊₁, rᵢ₋₁)[:,2], τ(rᵢ₊₁, rᵢ₋₁)[:,1]])...)')
+    else
+        oftype(τ(rᵢ₊₁, rᵢ₋₁),vcat(transpose.([-τ(rᵢ₊₁, rᵢ₋₁)[:,2], τ(rᵢ₊₁, rᵢ₋₁)[:,1]])...)')
+    end
+end
+        #n(rᵢ₊₁, rᵢ₋₁) = (τv = τ(rᵢ₊₁, rᵢ₋₁);return (-τv[2], τv[1]))
 """
 Fₛ⁺ is the spring force (Nonlinear) used for mechanical relaxation in the positive direction.
 l = length of the spring
@@ -45,14 +50,14 @@ kf = the amount of tissue produced per unit area per unit time
 
 #Vₙ(ρ⁺::Float64,ρ⁻::Float64,kf::Float64) = kf*(ρ⁺+ρ⁻)/2  
 
-function Vₙ(rᵢ₋₁, rᵢ, rᵢ₊₁, kf, δt)
+function Vₙ(rᵢ₋₁, rᵢ, rᵢ₊₁, kf, δt,type)
     ρₗ = ρ(rᵢ, rᵢ₋₁)
     ρᵣ = ρ(rᵢ₊₁, rᵢ)
     Vₗ = kf .* ρₗ
     Vᵣ = kf .* ρᵣ
 
-    nₗ = n(rᵢ₋₁, rᵢ)
-    nᵣ = n(rᵢ, rᵢ₊₁)
+    nₗ = n(rᵢ₋₁, rᵢ,type)
+    nᵣ = n(rᵢ, rᵢ₊₁,type)
 
     rₘ₁ = rᵢ - (Vₗ .* nₗ .* δt)
     rₗ = rᵢ₋₁ - (Vₗ .* nₗ .* δt)
