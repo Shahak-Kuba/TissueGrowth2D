@@ -40,7 +40,7 @@ f = plotResults1D_Velocity(sols[4].u, sols[4].Vₙ)
 sols = sim2D();
 f = plotAreaVStime(sols)
 
-cmap = :gnuplot2
+cmap = :viridis
 f = plotResults2D(sols[1].u, sols[1].Density, cmap)
 f = plotResults2D(sols[2].u, sols[2].Density, cmap)
 f = plotResults2D(sols[3].u, sols[3].Density, cmap)

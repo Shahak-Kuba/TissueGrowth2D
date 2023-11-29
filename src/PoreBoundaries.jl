@@ -70,7 +70,7 @@ function initial_pos_1D(u0,N,η,kf,l₀)
 end
 
 function initial_pos_2D(u0,N,η,kf,l₀)
-    kₛ = 0.2*N
+    kₛ = 1
     η = η/N
     kf = kf/N
     Tmax = 10;
@@ -105,20 +105,29 @@ function u0SetUp(btype,R₀,N)
             θ = collect(LinRange(0.0, 2*π, N+1))  # just use collect(θ) to convert into a vector
             #pop!(θ)
             @views u0[:,i] .= [Xᵩ(θ[i]), Yᵩ(θ[i])];
+        elseif btype == "star"
+            star_points = 6
+            r₀ = R₀/2 
+            Rotation_Angle = pi/2
+            rotation_angle = Rotation_Angle + pi/star_points
+            verts = StarVerticies(star_points, R₀, Rotation_Angle, r₀, rotation_angle)
+            u0 = interpolate_vertices(verts, Int( round(N/(2*star_points))))'
         end
     end
 
-    
+    """
     if btype == "SineWave"
         relax_pos = initial_pos_1D(u0',N,1,0,1e-3)
     else
         relax_pos = initial_pos_2D(u0',N,1,0,1e-3)
     end
+    """
+    relax_pos = u0
 
-    #return oftype(relax_pos, relax_pos')
-    return relax_pos
+    return oftype(ElasticArray{Float64}(undef,2,size(relax_pos,2)), hcat(relax_pos)')
 end
 
+##############################################################################################
 
 # linear interpolation for custom shapes
 
@@ -139,7 +148,7 @@ function interpolate_vertices(vertices, N)
         step_x = (x2 - x1) / N
         step_y = (y2 - y1) / N
 
-        for j in 0:N
+        for j in 0:N-1
             x = x1 + j * step_x
             y = y1 + j * step_y
             push!(interpolated_x, x)
@@ -147,7 +156,7 @@ function interpolate_vertices(vertices, N)
         end
     end
 
-    return hcat([interpolated_x, interpolated_y]...)[1:end-1,:]
+    return hcat([interpolated_x, interpolated_y]...)
 end
 
 
