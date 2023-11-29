@@ -4,8 +4,7 @@ function sim1D()
     m = 1 # number of springs per cell
     M = m*N # total number of springs along the interface
     R₀ = 1  # shape radius
-    kₛ_Array = [13]
-    #kₛ_Array = [0.1, 1, 2]
+    kₛ_Array = [0.1, 1, 5, 10]
     l₀ = 1e-3
     kf = 0.7
     η = 1
@@ -30,4 +29,4 @@ function sim1D()
 
     return results
 
-end
+end 

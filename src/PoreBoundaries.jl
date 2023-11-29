@@ -119,3 +119,81 @@ function u0SetUp(btype,R₀,N)
     return relax_pos
 end
 
+
+# linear interpolation for custom shapes
+
+function interpolate_vertices(vertices, N)
+    # Ensure at least two vertices are given
+    if length(vertices) < 2
+        error("At least two vertices are needed.")
+    end
+
+    interpolated_x = Float64[]
+    interpolated_y = Float64[]
+
+    for i in 1:size(vertices,1)-1
+        x1, y1 = vertices[i,:]
+        x2, y2 = vertices[i+1,:]
+
+        # Calculate step sizes for x and y coordinates
+        step_x = (x2 - x1) / N
+        step_y = (y2 - y1) / N
+
+        for j in 0:N
+            x = x1 + j * step_x
+            y = y1 + j * step_y
+            push!(interpolated_x, x)
+            push!(interpolated_y, y)
+        end
+    end
+
+    return hcat([interpolated_x, interpolated_y]...)[1:end-1,:]
+end
+
+
+function regular_polygon_vertices(N, R, rotation_angle)
+    vertices = Vector{Float64}[]
+
+    for i in 0:N-1
+        angle = 2π * i / N + rotation_angle
+        x = R * cos(angle)
+        y = R * sin(angle)
+        push!(vertices, [x, y])
+    end
+
+    return hcat(vertices...)'
+end
+
+function StarVerticies(N, R, Rotation_Angle, r, rotation_angle)
+    StarVerts = Vector{Float64}[]
+    # generating verticies for outside polygon
+    VERTS = regular_polygon_vertices(N, R, Rotation_Angle)
+    # generating verticies for inside polygon
+    verts = regular_polygon_vertices(N, r, rotation_angle)
+
+    # combining the two
+    for i in 1:N
+        push!(StarVerts, VERTS[i,:])
+        push!(StarVerts, verts[i,:])
+    end
+    push!(StarVerts, VERTS[1,:])
+
+    return hcat(StarVerts...)'
+end
+
+
+# Sample code for usage
+"""
+N = 7
+R = 1
+r = 0.5
+
+Rotation_Angle = pi/2
+rotation_angle = Rotation_Angle + pi/N
+
+verts = StarVerticies(N, R, Rotation_Angle, r, rotation_angle)
+scatter(verts[:,1],verts[:,2])
+u = interpolate_vertices(verts, k)
+
+scatter(u[:,1],u[:,2])
+"""

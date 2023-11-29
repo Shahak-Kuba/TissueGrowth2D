@@ -8,8 +8,8 @@ function PostCalcs1D(u, p)
     ψ = zeros(size(u, 1))
     Κ = zeros(size(u, 1))
 
-    uᵢ₊₁ = circshift(u,1)
-    uᵢ₋₁ = circshift(u,-1)
+    uᵢ₊₁ = circshift(u,-1)
+    uᵢ₋₁ = circshift(u,1)
     uᵢ₋₁[1,:] = uᵢ₋₁[1,:]-[dom;0]
     uᵢ₊₁[end,:] = uᵢ₊₁[end,:]+[dom;0]
     ∑F = diag((Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀)) * transpose(τ(uᵢ₊₁,uᵢ₋₁)))

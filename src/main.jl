@@ -10,7 +10,8 @@ using CurveFit
 
 include("MechanicalEqns.jl")
 include("PoreBoundaries.jl")
-include("PlottingFncs.jl")
+include("PlottingFncs1D.jl")
+include("PlottingFncs2D.jl")
 include("Simulation_1D.jl")
 include("Simulation_2D.jl")
 include("TissueGrowthODEproblem.jl")
@@ -26,10 +27,12 @@ sols = sim1D();
 f = plotResults1D(sols[1].u, sols[1].Density)
 f = plotResults1D(sols[2].u, sols[2].Density)
 f = plotResults1D(sols[3].u, sols[3].Density)
+f = plotResults1D(sols[4].u, sols[4].Density)
 
-f = plotResults1D(sols[1].u, sols[1].Vₙ)
-f = plotResults1D(sols[2].u, sols[2].Vₙ)
-f = plotResults1D(sols[3].u, sols[3].Vₙ)
+f = plotResults1D_Velocity(sols[1].u, sols[1].Vₙ)
+f = plotResults1D_Velocity(sols[2].u, sols[2].Vₙ)
+f = plotResults1D_Velocity(sols[3].u, sols[3].Vₙ)
+f = plotResults1D_Velocity(sols[4].u, sols[4].Vₙ)
 #f = plotKapVsVel(sols[1])
 
 
