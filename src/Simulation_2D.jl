@@ -9,9 +9,9 @@ function sim2D()
     l₀ = 1e-3
     kf = 0.1
     η = 1
-    Tmax = 14# days
+    Tmax = 31# days
     δt = 0.0005
-    btypes = ["star"] #["circle", "triangle", "square", "hex"]
+    btypes = ["circle", "triangle", "square", "hex", "star"]
     savetimes = LinRange(0, Tmax, 8)
 
     #sol_array = Array{ODESolution}(undef,length(btypes));

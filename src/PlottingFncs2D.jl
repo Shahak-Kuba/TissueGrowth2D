@@ -69,7 +69,8 @@ function plotAreaVStime(sols)
     lin2 = lines!(gaxmain, sols[2].t, sols[2].Ω, linewidth=4, linestyle=:dash)
     lin3 = lines!(gaxmain, sols[3].t, sols[3].Ω, linewidth=4, linestyle=:dot)
     lin4 = lines!(gaxmain, sols[4].t, sols[4].Ω, linewidth=4, linestyle=:dashdot)
-    Legend(f[1, 2], [lin1, lin2, lin3, lin4], ["circle", "triangle", "square", "hex"])
+    lin5 = lines!(gaxmain, sols[5].t, sols[5].Ω, linewidth=4, linestyle=:dashdot)
+    Legend(f[1, 2], [lin1, lin2, lin3, lin4, lin5], ["circle", "triangle", "square", "hex", "star"])
     return f
 end
 
@@ -87,6 +88,8 @@ function plotKapVsVel(sol)
             mid = floor(Int64, length(sol.Κ[ii])/6)
         elseif sol.btype == "circle"
             mid = floor(Int64, length(sol.Κ[ii])/2)
+        elseif sol.btype == "star"
+            mid = floor(Int64, length(sol.Κ[ii])/1)
         end
 
         x = sort(sol.Κ[ii][2:mid])

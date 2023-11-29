@@ -106,7 +106,7 @@ function u0SetUp(btype,R₀,N)
             #pop!(θ)
             @views u0[:,i] .= [Xᵩ(θ[i]), Yᵩ(θ[i])];
         elseif btype == "star"
-            star_points = 6
+            star_points = 5
             r₀ = R₀/2 
             Rotation_Angle = pi/2
             rotation_angle = Rotation_Angle + pi/star_points
@@ -115,16 +115,18 @@ function u0SetUp(btype,R₀,N)
         end
     end
 
-    """
+
     if btype == "SineWave"
         relax_pos = initial_pos_1D(u0',N,1,0,1e-3)
     else
         relax_pos = initial_pos_2D(u0',N,1,0,1e-3)
     end
+    return relax_pos
     """
     relax_pos = u0
 
     return oftype(ElasticArray{Float64}(undef,2,size(relax_pos,2)), hcat(relax_pos)')
+    """
 end
 
 ##############################################################################################
@@ -174,11 +176,15 @@ function regular_polygon_vertices(N, R, rotation_angle)
 end
 
 function StarVerticies(N, R, Rotation_Angle, r, rotation_angle)
+    # finding R such that areas will match with formula A = 2N(0.5*R₀*rₒ*sin(θ))
+    R₀ = √((4*π*(R^2))/(2*N*sin(π/N)))
+    rₒ = R₀/2
+    # empty vector
     StarVerts = Vector{Float64}[]
     # generating verticies for outside polygon
-    VERTS = regular_polygon_vertices(N, R, Rotation_Angle)
+    VERTS = regular_polygon_vertices(N, R₀, Rotation_Angle)
     # generating verticies for inside polygon
-    verts = regular_polygon_vertices(N, r, rotation_angle)
+    verts = regular_polygon_vertices(N, rₒ, rotation_angle)
 
     # combining the two
     for i in 1:N
