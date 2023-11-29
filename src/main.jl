@@ -46,6 +46,7 @@ f = plotResults2D(sols[2].u, sols[2].Density, cmap)
 f = plotResults2D(sols[3].u, sols[3].Density, cmap)
 f = plotResults2D(sols[4].u, sols[4].Density, cmap)
 f = plotResults2D(sols[5].u, sols[5].Density, cmap)
+f = plotResults2D(sols[6].u, sols[6].Density, cmap)
 
 f = plotKapVsVel(sols[1])
 f = plotKapVsVel(sols[2])

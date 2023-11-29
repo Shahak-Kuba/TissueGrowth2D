@@ -5,13 +5,13 @@ function sim2D()
     M = Int(m*N) # total number of springs along the interface
     #N = 500
     R₀ = 1  # shape radius
-    kₛ = 0.25
+    kₛ = 0.25 # 0.25 is nice smoothing
     l₀ = 1e-3
     kf = 0.1
     η = 1
     Tmax = 31# days
     δt = 0.0005
-    btypes = ["circle", "triangle", "square", "hex", "star"]
+    btypes = ["circle", "triangle", "square", "hex", "star","cross"]
     savetimes = LinRange(0, Tmax, 8)
 
     #sol_array = Array{ODESolution}(undef,length(btypes));

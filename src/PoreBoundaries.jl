@@ -112,6 +112,11 @@ function u0SetUp(btype,R₀,N)
             rotation_angle = Rotation_Angle + pi/star_points
             verts = StarVerticies(star_points, R₀, Rotation_Angle, r₀, rotation_angle)
             u0 = interpolate_vertices(verts, Int( round(N/(2*star_points))))'
+        elseif btype == "cross"
+            side_length = √((π*R₀^2)/5)
+            offset = side_length/2
+            verts = CrossVertecies(side_length, offset)
+            u0 = interpolate_vertices(verts, Int( round(N/12)))'
         end
     end
 
@@ -212,3 +217,24 @@ u = interpolate_vertices(verts, k)
 
 scatter(u[:,1],u[:,2])
 """
+
+# Cross Interface
+
+function CrossVertecies(side_length, offset)
+    CrossVerts = Vector{Float64}[]
+    push!(CrossVerts,[side_length + offset, offset])
+    push!(CrossVerts,[offset, offset])
+    push!(CrossVerts,[offset, offset + side_length])
+    push!(CrossVerts,[-offset, offset + side_length])
+    push!(CrossVerts,[-offset, offset])
+    push!(CrossVerts,[-offset - side_length, offset])
+    push!(CrossVerts,[-offset - side_length, -offset])
+    push!(CrossVerts,[-offset, -offset])
+    push!(CrossVerts,[-offset, -offset - side_length])
+    push!(CrossVerts,[offset, -offset - side_length])
+    push!(CrossVerts,[offset, -offset])
+    push!(CrossVerts,[offset + side_length, -offset])
+    push!(CrossVerts,[side_length + offset, offset])
+
+    return hcat(CrossVerts...)'
+end
