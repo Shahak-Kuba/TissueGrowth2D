@@ -23,33 +23,47 @@ include("PostSimulation.jl")
 
 
 # 1D simulation (periodic boundary)
-sols = sim1D();
-f = plotResults1D(sols[1].u, sols[1].Density)
-f = plotResults1D(sols[2].u, sols[2].Density)
-f = plotResults1D(sols[3].u, sols[3].Density)
-f = plotResults1D(sols[4].u, sols[4].Density)
+sols1D = sim1D();
+f = plotResults1D(sols1D[1].u, sols1D[1].Density)
+f = plotResults1D(sols1D[2].u, sols1D[2].Density)
+f = plotResults1D(sols1D[3].u, sols1D[3].Density)
+f = plotResults1D(sols1D[4].u, sols1D[4].Density)
 
-f = plotResults1D_Velocity(sols[1].u, sols[1].Vₙ)
-f = plotResults1D_Velocity(sols[2].u, sols[2].Vₙ)
-f = plotResults1D_Velocity(sols[3].u, sols[3].Vₙ)
-f = plotResults1D_Velocity(sols[4].u, sols[4].Vₙ)
+f = plotResults1D_Velocity(sols1D[1].u, sols1D[1].Vₙ)
+f = plotResults1D_Velocity(sols1D[2].u, sols1D[2].Vₙ)
+f = plotResults1D_Velocity(sols1D[3].u, sols1D[3].Vₙ)
+f = plotResults1D_Velocity(sols1D[4].u, sols1D[4].Vₙ)
 #f = plotKapVsVel(sols[1])
 
 
 # 2D simulation 
-sols = sim2D();
-f = plotAreaVStime(sols)
+sols2D = sim2D();
+f = plotAreaVStime(sols2D)
 
 cmap = :viridis
-f = plotResults2D(sols[1].u, sols[1].Density, cmap)
-f = plotResults2D(sols[2].u, sols[2].Density, cmap)
-f = plotResults2D(sols[3].u, sols[3].Density, cmap)
-f = plotResults2D(sols[4].u, sols[4].Density, cmap)
-f = plotResults2D(sols[5].u, sols[5].Density, cmap)
-f = plotResults2D(sols[6].u, sols[6].Density, cmap)
+f = plotResults2D(sols2D[1][1].u, sols2D[1][1].Density, cmap)
+f = plotResults2D(sols2D[1][2].u, sols2D[1][2].Density, cmap)
+f = plotResults2D(sols2D[1][3].u, sols2D[1][3].Density, cmap)
+f = plotResults2D(sols2D[1][4].u, sols2D[1][4].Density, cmap)
+f = plotResults2D(sols2D[1][5].u, sols2D[1][5].Density, cmap)
+f = plotResults2D(sols2D[1][6].u, sols2D[1][6].Density, cmap)
 
-f = plotKapVsVel(sols[1])
-f = plotKapVsVel(sols[2])
-f = plotKapVsVel(sols[3])
-f = plotKapVsVel(sols[4])
-f = plotKapVsVel(sols[5])
+f = plotResults2D(sols2D[2][1].u, sols2D[2][1].Density, cmap)
+f = plotResults2D(sols2D[2][2].u, sols2D[2][2].Density, cmap)
+f = plotResults2D(sols2D[2][3].u, sols2D[2][3].Density, cmap)
+f = plotResults2D(sols2D[2][4].u, sols2D[2][4].Density, cmap)
+f = plotResults2D(sols2D[2][5].u, sols2D[2][5].Density, cmap)
+f = plotResults2D(sols2D[2][6].u, sols2D[2][6].Density, cmap)
+
+f = plotResults2D(sols2D[3][1].u, sols2D[3][1].Density, cmap)
+f = plotResults2D(sols2D[3][2].u, sols2D[3][2].Density, cmap)
+f = plotResults2D(sols2D[3][3].u, sols2D[3][3].Density, cmap)
+f = plotResults2D(sols2D[3][4].u, sols2D[3][4].Density, cmap)
+f = plotResults2D(sols2D[3][5].u, sols2D[3][5].Density, cmap)
+f = plotResults2D(sols2D[3][6].u, sols2D[3][6].Density, cmap)
+
+f = plotKapVsVel(sols2D[1])
+f = plotKapVsVel(sols2D[2])
+f = plotKapVsVel(sols2D[3])
+f = plotKapVsVel(sols2D[4])
+f = plotKapVsVel(sols2D[5])
