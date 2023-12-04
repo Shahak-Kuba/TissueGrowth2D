@@ -22,32 +22,25 @@ include("Misc.jl")
 include("DataStructs.jl")
 include("PostSimulation.jl")
 
-
-
-# 1D simulation (periodic boundary)
-sols1D = sim1D();
-
-f = plotResults1D(sols1D[1].u, sols1D[1].Density)
-f = plotResults1D(sols1D[2].u, sols1D[2].Density)
-f = plotResults1D(sols1D[3].u, sols1D[3].Density)
-f = plotResults1D(sols1D[4].u, sols1D[4].Density)
-SaveData(sols1D, "test", "1D_simulations")
-
+# 1D simulations
+sols1D = LoadData("test", "1D_simulations")
 f = plotResults1D_Velocity(sols1D[1].u, sols1D[1].Vₙ)
 f = plotResults1D_Velocity(sols1D[2].u, sols1D[2].Vₙ)
 f = plotResults1D_Velocity(sols1D[3].u, sols1D[3].Vₙ)
 f = plotResults1D_Velocity(sols1D[4].u, sols1D[4].Vₙ)
 
-stiffness = 4
-plotResults1D_spatial_density(sols1D[stiffness].u, sols1D[stiffness].Density)
-#f = plotKapVsVel(sols[1])
 
+# 2D simulations
+## Area Loss simulations
+sols2d_δt = LoadData("AreaLoss_Simulations", "2D_Simulations")
+plotAreaVStime_δt(sols2d_δt[1][1], sols2d_δt[1][2], sols2d_δt[1][3], sols2d_δt[1][4], "triangle")
+plotAreaVStime_δt(sols2d_δt[2][1], sols2d_δt[2][2], sols2d_δt[2][3], sols2d_δt[2][4], "square")
+plotAreaVStime_δt(sols2d_δt[3][1], sols2d_δt[3][2], sols2d_δt[3][3], sols2d_δt[3][4], "hex")
+plotAreaVStime_δt(sols2d_δt[4][1], sols2d_δt[4][2], sols2d_δt[4][3], sols2d_δt[4][4], "star")
+plotAreaVStime_δt(sols2d_δt[5][1], sols2d_δt[5][2], sols2d_δt[5][3], sols2d_δt[5][4], "cross")
 
-# 2D simulations 
-sols2D = sim2D();
-SaveData(sols2D, "Diffusivity_Simulations", "2D_Simulations")
-f = plotAreaVStime(sols2D[1])
-
+## Diffusivity Simulations
+sols2D_δt = LoadData("Diffusivity_Simulations", "2D_Simulations")
 cmap = :viridis
 f = plotResults2D(sols2D[1][1].u, sols2D[1][1].Density, cmap)
 f = plotResults2D(sols2D[1][2].u, sols2D[1][2].Density, cmap)
@@ -69,16 +62,3 @@ f = plotResults2D(sols2D[3][3].u, sols2D[3][3].Density, cmap)
 f = plotResults2D(sols2D[3][4].u, sols2D[3][4].Density, cmap)
 f = plotResults2D(sols2D[3][5].u, sols2D[3][5].Density, cmap)
 f = plotResults2D(sols2D[3][6].u, sols2D[3][6].Density, cmap)
-
-# area loss simulations (take around 1 hr)
-sols2d_δt = sim2D_δt();
-plotAreaVStime_δt(sols2d_δt[1][1], sols2d_δt[1][2], sols2d_δt[1][3], sols2d_δt[1][4], "triangle")
-plotAreaVStime_δt(sols2d_δt[2][1], sols2d_δt[2][2], sols2d_δt[2][3], sols2d_δt[2][4], "square")
-plotAreaVStime_δt(sols2d_δt[3][1], sols2d_δt[3][2], sols2d_δt[3][3], sols2d_δt[3][4], "hex")
-plotAreaVStime_δt(sols2d_δt[4][1], sols2d_δt[4][2], sols2d_δt[4][3], sols2d_δt[4][4], "star")
-plotAreaVStime_δt(sols2d_δt[5][1], sols2d_δt[5][2], sols2d_δt[5][3], sols2d_δt[5][4], "cross")
-SaveData(sols2d_δt, "AreaLoss_Simulations", "2D_Simulations")
-
-geo = 4
-dt_sim = 2
-f = plotResults2D(sols2d_δt[geo][dt_sim].u, sols2d_δt[geo][dt_sim].Density, cmap)

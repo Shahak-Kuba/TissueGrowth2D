@@ -59,7 +59,7 @@ function initial_pos_1D(u0,N,η,kf,l₀)
     kₛ = 2*N
     η = η/N
     kf = kf/N
-    Tmax = 10;
+    Tmax = 20;
     δt = 0.01
     p = (N,kₛ,η,kf,l₀,δt)
     tspan = (0.0,Tmax)

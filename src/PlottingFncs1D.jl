@@ -38,6 +38,24 @@ function plotResults1D(u, var)
     return f
 end
 
+function plotResults1D_spatial_density(u, var)
+    #f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
+    #    resolution=(500, 500))
+    f = Figure(fontsize = 32,backgroundcolor=RGBf(0.98, 0.98, 0.98),
+        resolution=(1000, 800))
+    ga = f[1, 1] = GridLayout()
+    #gaxmain = Axis(ga[1, 1], limits=(-1.5, 1.5, -1.5, 1.5), aspect=DataAspect(), xlabel="x", ylabel="y")
+    gaxmain = Axis(ga[1, 1], limits=(0, 2*pi, 0, 50), xlabel="x", ylabel="y")
+    #CRange = findMinMax(var)
+    CRange = (0,50)
+    for i in eachindex(u)
+        if i%5 == 0
+            lines!(gaxmain, u[i][:,1], var[i].data, linewidth=5)
+        end
+    end
+    return f
+end
+
 function plotResults1D_Velocity(u, var)
     #f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
     #    resolution=(500, 500))
