@@ -66,14 +66,15 @@ l₀: resting spring length,
 
 Tmax: end of simulation time
 """
-function SetupODEproblem1D(btype,N,R₀,kₛ,η,kf,l₀,δt,Tmax)
-    kₛ = kₛ*N
-    η = η/N
-    kf = kf/N
+function SetupODEproblem1D(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax)
+    l₀ = l₀/m
+    kₛ = kₛ*m
+    kf = kf/m
+    η = η/m
     # setting up initial conditions
-    u0 = u0SetUp(btype,R₀,N)
+    u0 = u0SetUp(btype,R₀,M)
     # solving ODE problem
-    p = (N,kₛ,η,kf,l₀,δt)
+    p = (M,kₛ,η,kf,l₀,δt)
     tspan = (0.0,Tmax)
     return ODEProblem(ODE_fnc_1D!,u0,tspan,p), p
 end

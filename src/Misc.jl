@@ -1,7 +1,8 @@
 
-function printInfo(simNum,simTotal,btype,N,kₛ,η,kf)
+function printInfo(simNum,simTotal,btype,N,kₛ,η,kf,M,D)
     println(@sprintf "----------------------------- Simulation %d/%d Complete -----------------------------" simNum simTotal)
-    println(@sprintf "Boundary Type: %s, Cell count: %d, kₛ: %.5f, η: %.5f, kf: %.5f" btype N kₛ η kf)
+    println(@sprintf "Boundary Type: %s, Cell count: %d, Springs per cell: %d" btype N Int(M/N))
+    println(@sprintf "kₛ¹: %.5f, η¹: %.5f, kf¹: %.5f, Diffusivity: %.5f" kₛ η kf D)
     println(@sprintf "-----------------------------------------------------------------------------------")
 end
 

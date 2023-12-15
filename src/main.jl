@@ -31,15 +31,15 @@ f = plotResults1D(sols1D[1].u, sols1D[1].Density)
 f = plotResults1D(sols1D[2].u, sols1D[2].Density)
 f = plotResults1D(sols1D[3].u, sols1D[3].Density)
 f = plotResults1D(sols1D[4].u, sols1D[4].Density)
-SaveData(sols1D, "test", "1D_simulations")
+SaveData(sols1D, "Alias_2017_redo", "1D_simulations")
 
 f = plotResults1D_Velocity(sols1D[1].u, sols1D[1].Vₙ)
 f = plotResults1D_Velocity(sols1D[2].u, sols1D[2].Vₙ)
 f = plotResults1D_Velocity(sols1D[3].u, sols1D[3].Vₙ)
 f = plotResults1D_Velocity(sols1D[4].u, sols1D[4].Vₙ)
 
-stiffness = 4
-plotResults1D_spatial_density(sols1D[stiffness].u, sols1D[stiffness].Density)
+stiffness = 1
+plotResults1D_spatial_density(sols1D[stiffness].u, sols1D[stiffness].Vₙ)
 #f = plotKapVsVel(sols[1])
 
 
@@ -81,4 +81,4 @@ SaveData(sols2d_δt, "AreaLoss_Simulations", "2D_Simulations")
 
 geo = 4
 dt_sim = 2
-f = plotResults2D(sols2d_δt[geo][dt_sim].u, sols2d_δt[geo][dt_sim].Density, cmap)
+f = plotResults2D(sols2d_δt[geo][dt_sim].u, sols2d_δt[geo][dt_sim].Density, cmap) b

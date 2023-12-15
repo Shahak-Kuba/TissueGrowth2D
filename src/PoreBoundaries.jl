@@ -101,7 +101,7 @@ function u0SetUp(btype,R₀,N)
         elseif btype == "hex"
             R = √((2/3√3)*π*(R₀^2)) # to produce identical areas
             @views u0[:,i] .= [Xₕ(R,θ[i]*3/pi), Yₕ(R,θ[i]*3/pi)]
-        elseif btype == "SineWave"
+        elseif btype == "SineWave" # length from (0→2π) ≈ 8.984
             θ = collect(LinRange(0.0, 2*π, N+1))  # just use collect(θ) to convert into a vector
             #pop!(θ)
             @views u0[:,i] .= [Xᵩ(θ[i]), Yᵩ(θ[i])];
