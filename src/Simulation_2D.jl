@@ -5,30 +5,32 @@ function sim2D()
     M = Int(m*N) # total number of springs along the interface
     #N = 500
     R₀ = 1  # shape radius
-    ks_Array = [0.01, 0.25, 1] # 0.25 is nice smoothing
-    l₀ = 1e-3
-    kf = 0.1
+    #ks_Array = [0.01, 0.25, 1] # 0.25 is nice smoothing
+    D = [0.001]#, 0.075, 0.15, 1]
+    l₀ = 1
+    kf = 0.001
     η = 1
+    growth_dir = "inward" 
     Tmax = 28# days
     δt = 0.0005
-    btypes = ["circle", "triangle", "square", "hex", "star","cross"]
+    btypes = ["star", "cross"]#["circle", "triangle", "square", "hex", "star","cross"]
     savetimes = LinRange(0, Tmax, 8)
 
     all_results = Vector{Vector{SimResults_t}}(undef, 0)
 
-    for jj in eachindex(ks_Array)
-        @views kₛ = ks_Array[jj]
+    for jj in eachindex(D)
+        @views kₛ = D[jj]*(η)/((l₀)^2)
         #sol_array = Array{ODESolution}(undef,length(btypes));
         results = Vector{SimResults_t}(undef, 0)
         # creating 
 
         for ii in eachindex(btypes)
             @views btype = btypes[ii]
-            prob, p = SetupODEproblem2D(btype, M, R₀, kₛ, η, kf, l₀, δt, Tmax)
+            prob, p = SetupODEproblem2D(btype, M, m, R₀, kₛ, η, kf, l₀, δt, Tmax, growth_dir)
             @time sol = solve(prob, Euler(), save_everystep = false, saveat=savetimes, dt=δt)
             #@btime sol = solve(prob, Euler(), saveat=savetimes, dt=δt)
             push!(results, postSimulation2D(btype, sol, p))
-            printInfo(ii,length(btypes),btype,M,kₛ*M,η/M,kf/M)
+            printInfo(ii,length(btypes),btype,N,kₛ*m,η/m,kf/m,M,D[jj])
         end
         push!(all_results,results)
     end

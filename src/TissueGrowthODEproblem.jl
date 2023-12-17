@@ -1,7 +1,7 @@
 # Mechanical Relaxation ODE problem
 # Open boundary ODE Function (PERIODIC Boundary)
 function ODE_fnc_1D_init!(du,u,p,t) 
-    N,kₛ,η,kf,l₀,δt = p
+    N,kₛ,η,kf,l₀,δt,growth_dir = p
     dom = 2*pi;
     uᵢ₊₁ = circshift(u,-1)
     uᵢ₋₁ = circshift(u,1)
@@ -13,21 +13,21 @@ end
 
 
 function ODE_fnc_1D!(du,u,p,t) 
-    N,kₛ,η,kf,l₀,δt = p
+    N,kₛ,η,kf,l₀,δt,growth_dir = p
     dom = 2*pi;
     uᵢ₊₁ = circshift(u,-1)
     uᵢ₋₁ = circshift(u,1)
     uᵢ₋₁[1,:] = uᵢ₋₁[1,:]-[dom;0]
     uᵢ₊₁[end,:] = uᵢ₊₁[end,:]+[dom;0]
     du .= (1/η) .* diag((Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀)) * transpose(τ(uᵢ₊₁,uᵢ₋₁))).*τ(uᵢ₊₁,uᵢ₋₁) +
-                       Vₙ(uᵢ₋₁,u,uᵢ₊₁,kf,δt,"1D")
+                       Vₙ(uᵢ₋₁,u,uᵢ₊₁,kf,δt,growth_dir)
    
     nothing
 end
 
 
 function ODE_fnc_2D_init!(du,u,p,t) 
-    N,kₛ,η,kf,l₀,δt = p
+    N,kₛ,η,kf,l₀,δt,growth_dir = p
     uᵢ₊₁ = circshift(u,1)
     uᵢ₋₁ = circshift(u,-1)
     du .= (1/η) .* diag((Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀)) * transpose(τ(uᵢ₊₁,uᵢ₋₁))).*τ(uᵢ₊₁,uᵢ₋₁)
@@ -35,11 +35,11 @@ function ODE_fnc_2D_init!(du,u,p,t)
 end
 
 function ODE_fnc_2D!(du,u,p,t) 
-    N,kₛ,η,kf,l₀,δt = p
+    N,kₛ,η,kf,l₀,δt,growth_dir = p
     uᵢ₊₁ = circshift(u,1)
     uᵢ₋₁ = circshift(u,-1)
     du .= (1/η) .* diag((Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀)) * transpose(τ(uᵢ₊₁,uᵢ₋₁))).*τ(uᵢ₊₁,uᵢ₋₁) +
-                       Vₙ(uᵢ₋₁,u,uᵢ₊₁,kf,δt,"2D")
+                       Vₙ(uᵢ₋₁,u,uᵢ₊₁,kf,δt,growth_dir)
 
     nothing
 end
@@ -62,11 +62,13 @@ kf: the amount of tissue produced per cell per unit time,
 
 l₀: resting spring length, 
 
-δt: Euler timestep size, 
+δt: Euler timestep size.
 
-Tmax: end of simulation time
+Tmax: end of simulation time.
+
+growth_dir: direction of tissue growth. Options: "inward", "outward". For 1D simulations using outward is growth in positive y direction.
 """
-function SetupODEproblem1D(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax)
+function SetupODEproblem1D(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,growth_dir)
     l₀ = l₀/m
     kₛ = kₛ*m
     kf = kf/m
@@ -74,19 +76,20 @@ function SetupODEproblem1D(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax)
     # setting up initial conditions
     u0 = u0SetUp(btype,R₀,M)
     # solving ODE problem
-    p = (M,kₛ,η,kf,l₀,δt)
+    p = (M,kₛ,η,kf,l₀,δt,growth_dir)
     tspan = (0.0,Tmax)
     return ODEProblem(ODE_fnc_1D!,u0,tspan,p), p
 end
 
-function SetupODEproblem2D(btype,N,R₀,kₛ,η,kf,l₀,δt,Tmax)
-    kₛ = kₛ*N
-    η = η/N
-    kf = kf/N
-    u0 = u0SetUp(btype,R₀,N)
+function SetupODEproblem2D(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,growth_dir)
+    l₀ = l₀/m
+    kₛ = kₛ*m
+    η = η/m
+    kf = kf/m
+    u0 = u0SetUp(btype,R₀,M)
     #plotInitialCondition(u0)
     # solving ODE problem
-    p = (N,kₛ,η,kf,l₀,δt)
+    p = (M,kₛ,η,kf,l₀,δt,growth_dir)
     tspan = (0.0,Tmax)
     return ODEProblem(ODE_fnc_2D!,u0,tspan,p), p
 end

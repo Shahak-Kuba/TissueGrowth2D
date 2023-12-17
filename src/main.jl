@@ -49,6 +49,8 @@ SaveData(sols2D, "Diffusivity_Simulations", "2D_Simulations")
 f = plotAreaVStime(sols2D[1])
 
 cmap = :viridis
+
+# very low diffusivity
 f = plotResults2D(sols2D[1][1].u, sols2D[1][1].Density, cmap)
 f = plotResults2D(sols2D[1][2].u, sols2D[1][2].Density, cmap)
 f = plotResults2D(sols2D[1][3].u, sols2D[1][3].Density, cmap)
@@ -56,6 +58,7 @@ f = plotResults2D(sols2D[1][4].u, sols2D[1][4].Density, cmap)
 f = plotResults2D(sols2D[1][5].u, sols2D[1][5].Density, cmap)
 f = plotResults2D(sols2D[1][6].u, sols2D[1][6].Density, cmap)
 
+# low diffusivity
 f = plotResults2D(sols2D[2][1].u, sols2D[2][1].Density, cmap)
 f = plotResults2D(sols2D[2][2].u, sols2D[2][2].Density, cmap)
 f = plotResults2D(sols2D[2][3].u, sols2D[2][3].Density, cmap)
@@ -63,12 +66,21 @@ f = plotResults2D(sols2D[2][4].u, sols2D[2][4].Density, cmap)
 f = plotResults2D(sols2D[2][5].u, sols2D[2][5].Density, cmap)
 f = plotResults2D(sols2D[2][6].u, sols2D[2][6].Density, cmap)
 
+# mid diffusivity
 f = plotResults2D(sols2D[3][1].u, sols2D[3][1].Density, cmap)
 f = plotResults2D(sols2D[3][2].u, sols2D[3][2].Density, cmap)
 f = plotResults2D(sols2D[3][3].u, sols2D[3][3].Density, cmap)
 f = plotResults2D(sols2D[3][4].u, sols2D[3][4].Density, cmap)
 f = plotResults2D(sols2D[3][5].u, sols2D[3][5].Density, cmap)
 f = plotResults2D(sols2D[3][6].u, sols2D[3][6].Density, cmap)
+
+# high diffusivity
+f = plotResults2D(sols2D[4][1].u, sols2D[3][1].Density, cmap)
+f = plotResults2D(sols2D[4][2].u, sols2D[3][2].Density, cmap)
+f = plotResults2D(sols2D[4][3].u, sols2D[3][3].Density, cmap)
+f = plotResults2D(sols2D[4][4].u, sols2D[3][4].Density, cmap)
+f = plotResults2D(sols2D[4][5].u, sols2D[3][5].Density, cmap)
+f = plotResults2D(sols2D[4][6].u, sols2D[3][6].Density, cmap)
 
 # area loss simulations (take around 1 hr)
 sols2d_δt = sim2D_δt();

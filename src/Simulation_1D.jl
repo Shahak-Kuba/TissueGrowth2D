@@ -11,6 +11,7 @@ function sim1D()
     η = 1 # of cell = η¹
     Tmax = 25 # days
     δt = 0.0001
+    growth_dir = "1D"
     #btypes = ["circle", "triangle", "square", "hex"]
     btype = "SineWave"
     savetimes = LinRange(0, Tmax, 30)
@@ -21,7 +22,7 @@ function sim1D()
 
     for ii in eachindex(D)
         @views kₛ = D[ii]*(η)/((l₀)^2)
-        prob, p = SetupODEproblem1D(btype, M, m, R₀, kₛ, η, kf, l₀, δt, Tmax)
+        prob, p = SetupODEproblem1D(btype, M, m, R₀, kₛ, η, kf, l₀, δt, Tmax, growth_dir)
         @time sol = solve(prob, Euler(), save_everystep = false, saveat=savetimes, dt=δt)
         #@btime sol = solve(prob, Euler(), saveat=savetimes, dt=δt)
         push!(results, postSimulation1D(btype, sol, p))
