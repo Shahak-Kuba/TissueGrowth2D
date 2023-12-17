@@ -88,7 +88,7 @@ function u0SetUp(btype,R₀,N)
     # setting up initial conditions
     θ = collect(LinRange(0.0, 2*π, N+1))  # just use collect(θ) to convert into a vector
     pop!(θ)
-    u0 = ElasticArray{Float64}(undef,2,N)
+    u0 = Array{Float64}(undef,2,N)
     for i in 1:N
         if btype == "circle"
             R = R₀ # to produce identical areas

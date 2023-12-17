@@ -35,11 +35,11 @@ function postSimulation1D(btype, sol, p)
     c = size(sol.t, 1)
 
     Area = Vector{Float64}(undef, c)
-    ∑F = Vector{ElasticVector{Float64, Vector{Float64}}}(undef, 0)
-    ψ = Vector{ElasticMatrix{Float64, Vector{Float64}}}(undef, 0)
+    ∑F = Vector{Vector{Float64, Vector{Float64}}}(undef, 0)
+    ψ = Vector{Matrix{Float64, Vector{Float64}}}(undef, 0)
     DENSITY = Vector{ElasticMatrix{Float64, Vector{Float64}}}(undef, 0)
     vₙ = Vector{Vector{Float64}}(undef, 0)
-    Κ = Vector{ElasticMatrix{Float64, Vector{Float64}}}(undef, 0)
+    Κ = Vector{Matrix{Float64, Vector{Float64}}}(undef, 0)
 
     
     for ii in axes(sol.u, 1)
@@ -95,11 +95,11 @@ function postSimulation2D(btype, sol, p)
     c = size(sol.t, 1)
 
     Area = Vector{Float64}(undef, c)
-    ∑F = Vector{ElasticVector{Float64, Vector{Float64}}}(undef, 0)
-    ψ = Vector{ElasticMatrix{Float64, Vector{Float64}}}(undef, 0)
-    DENSITY = Vector{ElasticMatrix{Float64, Vector{Float64}}}(undef, 0)
+    ∑F = Vector{Vector{Float64}}(undef, 0)
+    ψ = Vector{Matrix{Float64}}(undef, 0)
+    DENSITY = Vector{Matrix{Float64}}(undef, 0)
     vₙ = Vector{Vector{Float64}}(undef, 0)
-    Κ = Vector{ElasticMatrix{Float64, Vector{Float64}}}(undef, 0)
+    Κ = Vector{Matrix{Float64}}(undef, 0)
 
     for ii in axes(sol.u, 1)
         Area[ii] = Ω(sol.u[ii]) # area calculation
