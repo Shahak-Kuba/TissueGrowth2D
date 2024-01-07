@@ -121,18 +121,18 @@ function u0SetUp(btype,R₀,N)
         end
     end
 
-
+    """
     if btype == "SineWave"
         relax_pos = initial_pos_1D(u0',N,1,0,1e-3)
     else
         relax_pos = initial_pos_2D(u0',N,1,0,1e-3)
     end
     return relax_pos
-    """
-    relax_pos = u0
 
-    return oftype(ElasticArray{Float64}(undef,2,size(relax_pos,2)), hcat(relax_pos)')
     """
+    return u0
+
+    #return oftype(ElasticArray{Float64}(undef,2,size(relax_pos,2)), hcat(relax_pos)')
 end
 
 ##############################################################################################

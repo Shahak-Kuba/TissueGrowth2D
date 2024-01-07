@@ -1,8 +1,8 @@
-using OrdinaryDiffEq
+#using OrdinaryDiffEq
+using DifferentialEquations
 using CairoMakie
 using ColorSchemes
 using Colors
-using ElasticArrays
 using LinearAlgebra
 using BenchmarkTools
 using Printf
@@ -11,6 +11,7 @@ using JLD2
 import FilePaths
 
 include("MechanicalEqns.jl")
+include("CellBehaviours.jl")
 include("PoreBoundaries.jl")
 include("PlottingFncs1D.jl")
 include("PlottingFncs2D.jl")
@@ -44,12 +45,16 @@ plotResults1D_spatial_density(sols1D[stiffness].u, sols1D[stiffness].Vₙ)
 
 
 # 2D simulations 
-sols2D = sim2D();
+sols2D = sim2D(); 
 SaveData(sols2D, "Diffusivity_Simulations", "2D_Simulations")
 f = plotAreaVStime(sols2D[1])
 
 cmap = :viridis
 
+f = plotResults2D_Velocity(sols2D[1][1].u, sols2D[1][1].Vₙ, cmap)
+f = plotResults2D_Velocity(sols2D[2][1].u, sols2D[2][1].Vₙ, cmap)
+f = plotResults2D_Velocity(sols2D[3][1].u, sols2D[3][1].Vₙ, cmap)
+f = plotResults2D_Velocity(sols2D[4][1].u, sols2D[4][1].Vₙ, cmap)
 # very low diffusivity
 f = plotResults2D(sols2D[1][1].u, sols2D[1][1].Density, cmap)
 f = plotResults2D(sols2D[1][2].u, sols2D[1][2].Density, cmap)
@@ -91,6 +96,7 @@ plotAreaVStime_δt(sols2d_δt[4][1], sols2d_δt[4][2], sols2d_δt[4][3], sols2d_
 plotAreaVStime_δt(sols2d_δt[5][1], sols2d_δt[5][2], sols2d_δt[5][3], sols2d_δt[5][4], "cross")
 SaveData(sols2d_δt, "AreaLoss_Simulations", "2D_Simulations")
 
-geo = 4
-dt_sim = 2
-f = plotResults2D(sols2d_δt[geo][dt_sim].u, sols2d_δt[geo][dt_sim].Density, cmap) b
+cmap = :turbo
+geo = 1
+dt_sim = 4
+f = plotResults2D(sols2d_δt[geo][dt_sim].u, sols2d_δt[geo][dt_sim].Density, cmap)

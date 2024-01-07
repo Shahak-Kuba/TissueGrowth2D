@@ -63,6 +63,8 @@ end
 function PostCalcs2D(u, p)
     N, kₛ, η, kf, l₀, δt = p
 
+    #u = reshape(u, Int(length(u)/2), 2)
+
     ∑F = zeros(size(u, 1))
     density = zeros(size(u, 1))
     vₙ = zeros(size(u, 1))
@@ -101,10 +103,12 @@ function postSimulation2D(btype, sol, p)
     vₙ = Vector{Vector{Float64}}(undef, 0)
     Κ = Vector{Matrix{Float64}}(undef, 0)
 
-    for ii in axes(sol.u, 1)
-        Area[ii] = Ω(sol.u[ii]) # area calculation
+    u = [(reshape(vec, 2, Int(length(vec)/2)))' for vec in sol.u]
+
+    for ii in axes(u, 1)
+        Area[ii] = Ω(u[ii]) # area calculation
         #append!(sol.u[ii], sol.u[ii][:,1]) # closing the domain Ω
-        Fnet, nV, den, stre, kap = PostCalcs2D(sol.u[ii], p)
+        Fnet, nV, den, stre, kap = PostCalcs2D(u[ii], p)
         push!(∑F, Fnet)
         push!(vₙ, nV)
         push!(DENSITY, den)
@@ -112,5 +116,5 @@ function postSimulation2D(btype, sol, p)
         push!(Κ, kap)
     end
 
-    return SimResults_t(btype, sol.t, sol.u, ∑F, DENSITY, vₙ, Area, ψ, Κ)
+    return SimResults_t(btype, sol.t, u, ∑F, DENSITY, vₙ, Area, ψ, Κ)
 end

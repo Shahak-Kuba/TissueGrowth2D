@@ -36,11 +36,11 @@ end
 
 function ODE_fnc_2D!(du,u,p,t) 
     N,kₛ,η,kf,l₀,δt,growth_dir = p
-    uᵢ₊₁ = circshift(u,1)
-    uᵢ₋₁ = circshift(u,-1)
-    du .= (1/η) .* diag((Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀)) * transpose(τ(uᵢ₊₁,uᵢ₋₁))).*τ(uᵢ₊₁,uᵢ₋₁) +
-                       Vₙ(uᵢ₋₁,u,uᵢ₊₁,kf,δt,growth_dir)
-
+    u_mat = reshape(u, 2, Int(length(u)/2))'
+    uᵢ₊₁ = circshift(u_mat,1)
+    uᵢ₋₁ = circshift(u_mat,-1)
+    du .= vec( ((1/η) .* diag((Fₛ⁺(u_mat,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u_mat,uᵢ₊₁,uᵢ₋₁,kₛ,l₀)) * transpose(τ(uᵢ₊₁,uᵢ₋₁))).*τ(uᵢ₊₁,uᵢ₋₁) +
+                       Vₙ(uᵢ₋₁,u_mat,uᵢ₊₁,kf,δt,growth_dir))' )
     nothing
 end
 
@@ -81,15 +81,15 @@ function SetupODEproblem1D(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,growth_dir)
     return ODEProblem(ODE_fnc_1D!,u0,tspan,p), p
 end
 
-function SetupODEproblem2D(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,growth_dir)
+function SetupODEproblem2D(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,growth_dir,prolif,death,embed,α,β,γ)
     l₀ = l₀/m
     kₛ = kₛ*m
     η = η/m
     kf = kf/m
-    u0 = u0SetUp(btype,R₀,M)
+    u0 = vec(u0SetUp(btype,R₀,M))
     #plotInitialCondition(u0)
     # solving ODE problem
-    p = (M,kₛ,η,kf,l₀,δt,growth_dir)
+    p = (m,kₛ,η,kf,l₀,δt,growth_dir,prolif,death,embed,α,β,γ)
     tspan = (0.0,Tmax)
     return ODEProblem(ODE_fnc_2D!,u0,tspan,p), p
 end
