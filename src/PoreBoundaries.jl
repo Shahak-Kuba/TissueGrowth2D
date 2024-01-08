@@ -84,6 +84,54 @@ function initial_pos_2D(u0,N,η,kf,l₀)
     return init_pos.u[2]
 end
 
+function u0SetUp(btype,R₀,N,dist_type)
+    # setting up initial conditions
+    #θ = collect(LinRange(0.0, 2*π, N+1))  # just use collect(θ) to convert into a vector
+    θ = collect(NodeDistribution(0.0,2*π,N+1,dist_type)) 
+    pop!(θ)
+    u0 = Array{Float64}(undef,2,N)
+    for i in 1:N
+        if btype == "circle"
+            R = R₀ # to produce identical areas
+            @views u0[:,i] .= [X(R,θ[i]), Y(R,θ[i])];
+        elseif btype == "triangle"
+            R = √((2*π*R₀^2)/sin(π/3))
+            @views u0[:,i] .= [Xₜ(R,θ[i]*3/(2*π)), Yₜ(R,θ[i]*3/(2*π))]
+        elseif btype == "square"
+            R = √(π*(R₀^2)) # to produce identical areas
+            @views u0[:,i] .= [Xₛ(R,θ[i]*2/pi), Yₛ(R,θ[i]*2/pi)]
+        elseif btype == "hex"
+            R = √((2/3√3)*π*(R₀^2)) # to produce identical areas
+            @views u0[:,i] .= [Xₕ(R,θ[i]*3/pi), Yₕ(R,θ[i]*3/pi)]
+        elseif btype == "SineWave" # length from (0→2π) ≈ 8.984
+            θ = collect(LinRange(0.0, 2*π, N+1))  # just use collect(θ) to convert into a vector
+            #pop!(θ)
+            @views u0[:,i] .= [Xᵩ(θ[i]), Yᵩ(θ[i])];
+        elseif btype == "star"
+            star_points = 5
+            r₀ = R₀/2 
+            Rotation_Angle = pi/2
+            rotation_angle = Rotation_Angle + pi/star_points
+            verts = StarVerticies(star_points, R₀, Rotation_Angle, r₀, rotation_angle)
+            u0 = interpolate_vertices(verts, Int( round(N/(2*star_points))))'
+        elseif btype == "cross"
+            side_length = √((π*R₀^2)/5)
+            offset = side_length/2
+            verts = CrossVertecies(side_length, offset)
+            u0 = interpolate_vertices(verts, Int( round(N/12)))'
+        end
+    end
+
+    """
+    if btype == "SineWave"
+        relax_pos = initial_pos_1D(u0',N,1,0,1e-3)
+    else
+        relax_pos = initial_pos_2D(u0',N,1,0,1e-3)
+    end
+    """
+    return u0
+end
+
 function u0SetUp(btype,R₀,N)
     # setting up initial conditions
     θ = collect(LinRange(0.0, 2*π, N+1))  # just use collect(θ) to convert into a vector
@@ -133,6 +181,14 @@ function u0SetUp(btype,R₀,N)
     return u0
 
     #return oftype(ElasticArray{Float64}(undef,2,size(relax_pos,2)), hcat(relax_pos)')
+end
+
+function NodeDistribution(start,stop,length,type)
+    if type == "Linear"
+        return LinRange(start, stop, length)
+    else
+        return nonLinearRange(start, stop, length, type)
+    end
 end
 
 ##############################################################################################

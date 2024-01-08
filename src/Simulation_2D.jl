@@ -12,7 +12,7 @@ function sim2D()
     η = 1
     growth_dir = "inward" 
     Tmax = 21# days
-    δt = 0.001
+    δt = 0.01
     btypes = ["circle"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
     dist_type = "sigmoid" #Options: ["Linear", "sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
 
@@ -37,7 +37,7 @@ function sim2D()
                                         growth_dir,prolif,death,embed,α,β,γ,dist_type)
             #cb = PeriodicCallback(affect!,event_δt; save_positions=(false, false))
             cb = ContinuousCallback(condition, affect!;  save_positions=(false, false))
-            @time sol = solve(prob, RK4(), save_everystep = false, saveat=savetimes, dt=δt, callback = cb)
+            @time sol = solve(prob, RK4(step_limiter! = δt), save_everystep = false, saveat=savetimes, dt=δt, dtmax = δt, callback = cb)
             push!(results, postSimulation2D(btype, sol, p))
             printInfo(ii,length(btypes),btype,N,kₛ*m,η/m,kf/m,M,D[jj])
         end

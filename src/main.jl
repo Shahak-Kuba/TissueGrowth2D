@@ -49,7 +49,7 @@ sols2D = sim2D();
 SaveData(sols2D, "Diffusivity_Simulations", "2D_Simulations")
 f = plotAreaVStime(sols2D[1])
 
-cmap = :viridis
+cmap = :seismic
 
 f = plotResults2D_Velocity(sols2D[1][1].u, sols2D[1][1].Vₙ, cmap)
 f = plotResults2D_Velocity(sols2D[2][1].u, sols2D[2][1].Vₙ, cmap)
