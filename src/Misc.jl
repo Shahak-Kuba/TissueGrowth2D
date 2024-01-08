@@ -64,7 +64,32 @@ function nonLinearRange(start, stop, length, dist_type)
         k = 5; # slope steepness
         sigmoid_range = 1 ./ (1 .+ exp.(-k.*(linear_range)))
         return start .+ (sigmoid_range .* (stop - start))
+    elseif dist_type == "2sigmoid"
+        # Piecewise sigmoid scaling
+        k1 = 10;  k2 = 10;
+        x01 = 0.5;  x02 = 0.5;
+        piecewise_sigmoid = [x < 0.5 ? 0.5 * (1 / (1 + exp(-k1 * (2x - x01)))) : 0.5 + 0.5 * (1 / (1 + exp(-k2 * (2x - 1 - x02)))) for x in linear_range]
+        return start .+ (piecewise_sigmoid * (stop - start))
+    elseif dist_type == "4sigmoid"
+        # Parameters for the sigmoid functions
+        k = 20
+        # Adjust midpoints for the full sigmoid in the first and last segments
+        x0 = [0.125, 0.375, 0.625, 0.875]
+
+        # Piecewise sigmoid scaling with 4 segments
+        piecewise_sigmoid = [if x < 0.25
+                                (1 / (1 + exp(-k * (4x - x0[1])))) * 0.25
+                             elseif x < 0.5
+                                0.25 + (1 / (1 + exp(-k * (4x - 1 - x0[2])))) * 0.25
+                             elseif x < 0.75
+                                0.5 + (1 / (1 + exp(-k * (4x - 2 - x0[3])))) * 0.25
+                             else
+                                0.75 + (1 / (1 + exp(-k * (4x - 3 - x0[4])))) * 0.25
+                             end for x in linear_range]
+
+        return start .+ (piecewise_sigmoid .* (stop - start))
     else
         error("Unsupported distribution type")
     end
 end
+

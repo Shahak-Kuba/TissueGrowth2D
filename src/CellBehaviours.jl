@@ -59,10 +59,6 @@ function event_callback!(integrator, t, u)
     return integrator  # Return the updated u if modified
 end
 
-function condition(u, t, integrator) # Event when condition(u,t,integrator) == 0
-    integrator.t - 0.01
-end
-
 function affect!(integrator)
     println("test")
     (m,kₛ,η,kf,l₀,δt,growth_dir,prolif,death,embed,α,β,γ) = integrator.p

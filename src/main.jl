@@ -49,12 +49,32 @@ sols2D = sim2D();
 SaveData(sols2D, "Diffusivity_Simulations", "2D_Simulations")
 f = plotAreaVStime(sols2D[1])
 
-cmap = :seismic
+cmap = :jet
 
 f = plotResults2D_Velocity(sols2D[1][1].u, sols2D[1][1].Vₙ, cmap)
 f = plotResults2D_Velocity(sols2D[2][1].u, sols2D[2][1].Vₙ, cmap)
 f = plotResults2D_Velocity(sols2D[3][1].u, sols2D[3][1].Vₙ, cmap)
 f = plotResults2D_Velocity(sols2D[4][1].u, sols2D[4][1].Vₙ, cmap)
+
+f = plotResults2D_Velocity(sols2D[1][2].u, sols2D[1][2].Vₙ, cmap)
+f = plotResults2D_Velocity(sols2D[2][2].u, sols2D[2][2].Vₙ, cmap)
+f = plotResults2D_Velocity(sols2D[3][2].u, sols2D[3][2].Vₙ, cmap)
+
+f = plotResults2D_Velocity(sols2D[1][3].u, sols2D[1][3].Vₙ, cmap)
+f = plotResults2D_Velocity(sols2D[2][3].u, sols2D[2][3].Vₙ, cmap)
+f = plotResults2D_Velocity(sols2D[3][3].u, sols2D[3][3].Vₙ, cmap)
+
+f = plotResults2D_Velocity(sols2D[1][4].u, sols2D[1][4].Vₙ, cmap)
+f = plotResults2D_Velocity(sols2D[2][4].u, sols2D[2][4].Vₙ, cmap)
+f = plotResults2D_Velocity(sols2D[3][4].u, sols2D[3][4].Vₙ, cmap)
+
+f = plotResults2D_Velocity(sols2D[1][5].u, sols2D[1][5].Vₙ, cmap)
+f = plotResults2D_Velocity(sols2D[2][5].u, sols2D[2][5].Vₙ, cmap)
+f = plotResults2D_Velocity(sols2D[3][5].u, sols2D[3][5].Vₙ, cmap)
+
+f = plotResults2D_Velocity(sols2D[1][6].u, sols2D[1][6].Vₙ, cmap)
+f = plotResults2D_Velocity(sols2D[2][6].u, sols2D[2][6].Vₙ, cmap)
+f = plotResults2D_Velocity(sols2D[3][6].u, sols2D[3][6].Vₙ, cmap)
 # very low diffusivity
 f = plotResults2D(sols2D[1][1].u, sols2D[1][1].Density, cmap)
 f = plotResults2D(sols2D[1][2].u, sols2D[1][2].Density, cmap)

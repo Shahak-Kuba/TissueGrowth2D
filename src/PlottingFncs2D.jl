@@ -79,9 +79,9 @@ function plotAreaVStime_δt(sol_δt1, sol_δt2, sol_δt3, sol_δt4, Geometry)
         resolution=(700, 500))
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], title="Void area difference compared with solution for δt = 0.00001 for $Geometry pore", xlabel="Time [Days]", ylabel="Ω-difference [units²]")
-    lin1 = lines!(gaxmain, sol_δt2.t, sol_δt1.Ω - sol_δt2.Ω, linewidth=4, linestyle=:solid)
-    lin2 = lines!(gaxmain, sol_δt3.t, sol_δt1.Ω - sol_δt3.Ω, linewidth=4, linestyle=:dash)
-    lin3 = lines!(gaxmain, sol_δt4.t, sol_δt1.Ω - sol_δt4.Ω, linewidth=4, linestyle=:dot)
+    lin1 = lines!(gaxmain, sol_δt2.t, sol_δt2.Ω - sol_δt1.Ω, linewidth=4, linestyle=:solid)
+    lin2 = lines!(gaxmain, sol_δt3.t, sol_δt3.Ω - sol_δt1.Ω, linewidth=4, linestyle=:dash)
+    lin3 = lines!(gaxmain, sol_δt4.t, sol_δt4.Ω - sol_δt1.Ω, linewidth=4, linestyle=:dot)
     Legend(f[1, 2], [lin1, lin2, lin3], ["δt = 0.0001", "δt = 0.001", "δt = 0.01"])
     return f
 end
