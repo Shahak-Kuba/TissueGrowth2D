@@ -6,14 +6,15 @@ function sim2D()
     #N = 500
     R₀ = 1  # shape radius
     #ks_Array = [0.01, 0.25, 1] # 0.25 is nice smoothing
-    D = [0.0001, 0.0075, 0.015, 1]
+    D = [0.0001, 0.0075, 0.015]#, 1]
     l₀ = 1
     kf = 0.0008
     η = 1
     growth_dir = "inward" 
     Tmax = 21# days
     δt = 0.001
-    btypes = ["square"] #["circle", "triangle", "square", "hex", "star","cross"]
+    btypes = ["circle"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
+    dist_type = "sigmoid" #Options: ["Linear", "sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
 
     ## Cell Behaviours
     prolif = false; death = true; embed = false;
@@ -33,7 +34,7 @@ function sim2D()
         for ii in eachindex(btypes)
             @views btype = btypes[ii]
             prob, p = SetupODEproblem2D(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,
-                                        growth_dir,prolif,death,embed,α,β,γ)
+                                        growth_dir,prolif,death,embed,α,β,γ,dist_type)
             #cb = PeriodicCallback(affect!,event_δt; save_positions=(false, false))
             cb = ContinuousCallback(condition, affect!;  save_positions=(false, false))
             @time sol = solve(prob, RK4(), save_everystep = false, saveat=savetimes, dt=δt, callback = cb)

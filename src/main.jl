@@ -45,7 +45,7 @@ plotResults1D_spatial_density(sols1D[stiffness].u, sols1D[stiffness].Vₙ)
 
 
 # 2D simulations 
-sols2D = sim2D(); 
+sols2D = sim2D();
 SaveData(sols2D, "Diffusivity_Simulations", "2D_Simulations")
 f = plotAreaVStime(sols2D[1])
 

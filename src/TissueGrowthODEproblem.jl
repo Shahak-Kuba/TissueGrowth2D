@@ -68,25 +68,25 @@ Tmax: end of simulation time.
 
 growth_dir: direction of tissue growth. Options: "inward", "outward". For 1D simulations using outward is growth in positive y direction.
 """
-function SetupODEproblem1D(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,growth_dir)
+function SetupODEproblem1D(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,growth_dir,dist_type)
     l₀ = l₀/m
     kₛ = kₛ*m
     kf = kf/m
     η = η/m
     # setting up initial conditions
-    u0 = u0SetUp(btype,R₀,M)
+    u0, θ = u0SetUp(btype,R₀,M,dist_type)
     # solving ODE problem
     p = (M,kₛ,η,kf,l₀,δt,growth_dir)
     tspan = (0.0,Tmax)
     return ODEProblem(ODE_fnc_1D!,u0,tspan,p), p
 end
 
-function SetupODEproblem2D(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,growth_dir,prolif,death,embed,α,β,γ)
+function SetupODEproblem2D(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,growth_dir,prolif,death,embed,α,β,γ,dist_type)
     l₀ = l₀/m
     kₛ = kₛ*m
     η = η/m
     kf = kf/m
-    u0 = vec(u0SetUp(btype,R₀,M))
+    u0 = vec(u0SetUp(btype,R₀,M,dist_type))
     #plotInitialCondition(u0)
     # solving ODE problem
     p = (m,kₛ,η,kf,l₀,δt,growth_dir,prolif,death,embed,α,β,γ)
